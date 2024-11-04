@@ -15,6 +15,7 @@
   "extends": [
     "next/core-web-vitals",
     "next/typescript",
+    "plugin:storybook/recommended",
     "airbnb",
     "airbnb-typescript",
     "airbnb/hooks",
