@@ -30,15 +30,14 @@
     "@aws-amplify/backend": "^1.4.0",
     "@aws-amplify/backend-cli": "^1.2.9",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "^18.3.10",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "aws-cdk": "^2.162.0",
     "aws-cdk-lib": "^2.162.0",
     "constructs": "^10.3.1",
     "esbuild": "^0.24.0",
-    "@typescript-eslint/eslint-plugin": "^8.12.2",
-    "@typescript-eslint/parser": "^8.12.2",
     "eslint": "^8",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
@@ -56,5 +55,6 @@
     "tailwindcss": "^3.4.1",
     "tsx": "^4.19.1",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e"
 }
