@@ -3,7 +3,7 @@ backend:
   phases:
     build:
       commands:
-        - npm ci --prefer-offline
+        - npm ci --legacy-peer-deps
         - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
   artifacts:
     baseDirectory: build
@@ -20,7 +20,7 @@ frontend:
   artifacts:
     baseDirectory: .next
     files:
-      - '**/*'
+      - "**/*"
   cache:
     paths:
       - .next/cache/**/*
