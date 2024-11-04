@@ -32,7 +32,7 @@ echo "✓ Branch protection check passed"
 # ------------------- lint 검사 -------------------
 
 # npx lint-staged
-pnpm run lint:fix
+pnpm lint-staged
 
 echo
 echo "✓ Finished linting tasks and fixing code issues"
