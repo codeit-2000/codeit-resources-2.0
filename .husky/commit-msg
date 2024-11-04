@@ -4,7 +4,7 @@ GREEN='\033[0;32m'
 RESET='\033[0m'
 
 export LANG=en_US.UTF-8
-export LC_ALL=en_US.URF-8
+export LC_ALL=en_US.UTF-8
 
 COMMIT_MSG_FILE=$1
 ORIGINAL_COMMIT_MSG=$(cat $COMMIT_MSG_FILE)
