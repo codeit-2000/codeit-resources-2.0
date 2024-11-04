@@ -1,0 +1,80 @@
+#!/bin/bash
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+RESET='\033[0m'
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.URF-8
+
+COMMIT_MSG_FILE=$1
+ORIGINAL_COMMIT_MSG=$(cat $COMMIT_MSG_FILE)
+COMMIT_MSG=$ORIGINAL_COMMIT_MSG
+
+# 커밋메세지 형식 
+# type: summary (이모지를 자동으로 추가)
+COMMIT_MESSAGE_REGEX="^[a-z]+: .+"
+
+format_commit_message() {
+  # 타입과 요약 추출
+  TYPE=$(echo "$ORIGINAL_COMMIT_MSG" | cut -d ':' -f1 | sed 's/^ *//')
+  SUMMARY=$(echo "$ORIGINAL_COMMIT_MSG" | cut -d ':' -f2- | sed 's/^ *//')
+
+  # 이모지 맵
+  case "$TYPE" in
+    feat) EXPECTED_EMOJI="✨";;
+    fix|hotfix) EXPECTED_EMOJI="🐛";;
+    build) EXPECTED_EMOJI="🔨";;
+    docs) EXPECTED_EMOJI="📝";;
+    design) EXPECTED_EMOJI="💄";;
+    merge|Merge) EXPECTED_EMOJI="🔀";;
+    rename) EXPECTED_EMOJI="🚚";;
+    style) EXPECTED_EMOJI="🎨";;
+    refactor) EXPECTED_EMOJI="♻️";;
+    remove) EXPECTED_EMOJI="🔥";;
+    test) EXPECTED_EMOJI="✅";;
+    chore) EXPECTED_EMOJI="📦";;
+    *)
+      printf "\n${RED}🚫 [Commit Blocked] 커밋 메시지는 'type: summary' 형식이어야 합니다!${RESET}\n"
+      printf "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+      printf "💡 올바른 타입을 소문자로 입력해주세요.\n"
+      printf "   ▶️ feat,fix,hotfix,build,docs,design,merge,rename,style,refactor,remove,test,chore \n\n"
+      printf "${GREEN}   (현재 커밋 메시지) $COMMIT_MSG \n${RESET}"
+      printf "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+      exit 1
+      ;;
+  esac
+
+  # 이모지를 자동으로 커밋 메시지에 추가
+  COMMIT_MSG="$EXPECTED_EMOJI $TYPE: $SUMMARY"
+}
+
+validate_commit_message() {
+  # 형식 검증
+  if ! echo "$COMMIT_MSG" | grep -qE "$COMMIT_MESSAGE_REGEX"; then
+    printf "\n${RED}🚫 [Commit Blocked] 커밋 메시지는 'type: summary' 형식이어야 합니다!${RESET}\n"
+    printf "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+    printf "💡 올바른 타입을 소문자로 입력해주세요.\n"
+    printf "   ▶️ feat,fix,hotfix,build,docs,design,merge,rename,style,refactor,remove,test,chore \n\n"
+    printf "${GREEN}   (현재 커밋 메시지) $COMMIT_MSG \n${RESET}"
+    printf "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+    exit 1
+  fi
+}
+
+handle_merge_commit() {
+  # Merge 커밋 처리
+  COMMIT_MSG="🔀 merge: $ORIGINAL_COMMIT_MSG"
+}
+
+# Merge로 시작하는 커밋은 특별 처리
+if echo "$ORIGINAL_COMMIT_MSG" | grep -q "^Merge"; then
+  handle_merge_commit
+else
+  validate_commit_message
+  format_commit_message
+fi
+
+echo "$COMMIT_MSG" > $COMMIT_MSG_FILE
+echo
+echo "🔆 Thanks for keeping the convention 🔆"
+echo
