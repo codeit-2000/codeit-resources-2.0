@@ -1,4 +1,21 @@
 version: 1
+backend:
+  phases:
+    preBuild:
+      commands:
+        - npm install -g pnpm
+        - pnpm install --prefer-offline
+    build:
+      commands:
+        - pnpm install --frozen-lockfile --prefer-offline
+        - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+  artifacts:
+    baseDirectory: build
+    files:
+      - amplify_outputs.json
+  cache:
+    paths:
+      - node_modules/**/*
 frontend:
   phases:
     preBuild:
