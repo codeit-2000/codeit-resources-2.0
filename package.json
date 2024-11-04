@@ -23,7 +23,10 @@
     "@storybook/react": "^8.4.1",
     "@storybook/test": "^8.4.1",
     "@svgr/core": "^8.1.0",
-    "@svgr/webpack": "^8.1.0"
+    "@svgr/webpack": "^8.1.0",
+    "@hookform/resolvers": "^3.9.0",
+    "dayjs": "^1.11.13",
+    "jotai": "^2.10.1"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
