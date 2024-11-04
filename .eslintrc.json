@@ -51,5 +51,5 @@
       }
     }
   ],
-  "ignorePatterns": ["next.config.ts", "postcss.config.mjs"]
+  "ignorePatterns": ["next.config.js", "postcss.config.mjs"]
 }
