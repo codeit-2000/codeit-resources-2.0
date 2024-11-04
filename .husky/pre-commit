@@ -1,60 +1,38 @@
-# #!/bin/bash
-# RED='\033[0;31m'
-# GREEN='\033[0;32m'
-# YELLOW='\033[0;33m'
-# RESET='\033[0m'
+#!/bin/bash
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+RESET='\033[0m'
 
-# echo
-# echo
-# echo "🔍 Checking branch protection and running linting tasks... "
-# echo
-
-
-# # ------------------- 브랜치 검사 -------------------
-
-# CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-# PROTECTED_BRANCHES="^(main|develop)"
-
-# if [[ "$CURRENT_BRANCH" =~ $PROTECTED_BRANCHES ]]
-# then
-#     printf "\n${RED}🚫 [Commit Blocked] '$CURRENT_BRANCH' 브랜치에 직접 커밋할 수 없습니다!${RESET}\n"
-#     printf "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-#     printf "❗️ 해당 브랜치는 보호된 브랜치입니다.\n\n"
-#     printf "   변경 사항은 별도의 작업 브랜치를 통해 머지해 주세요.\n"
-#     printf "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-#   exit 1
-# fi
-
-# echo
-# echo "✓ Branch protection check passed"
+echo
+echo
+echo "🔍 Checking branch protection and running linting tasks... "
+echo
 
 
-# # ------------------- 브랜치 동기화 검사 -------------------
+# ------------------- 브랜치 검사 -------------------
 
-# # 동기화 검사 대상 브랜치 설정
-# TARGET_BRANCH="develop"
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+PROTECTED_BRANCHES="^(main)$"
 
-# # 원격 저장소에서 최신 TARGET_BRANCH 정보 가져오기
-# REMOTE_COMMIT=$(git ls-remote origin refs/heads/$TARGET_BRANCH | awk '{print $1}')
-# LOCAL_COMMITS=$(git rev-list "$TARGET_BRANCH")
+if [[ "$CURRENT_BRANCH" =~ $PROTECTED_BRANCHES ]]
+then
+    printf "\n${RED}🚫 [Commit Blocked] '$CURRENT_BRANCH' 브랜치에 직접 커밋할 수 없습니다!${RESET}\n"
+    printf "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+    printf "❗️ 해당 브랜치는 보호된 브랜치입니다.\n\n"
+    printf "   변경 사항은 별도의 작업 브랜치를 통해 머지해 주세요.\n"
+    printf "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+  exit 1
+fi
 
-# # 로컬과 원격 브랜치 상태 비교
-# if echo "$LOCAL_COMMITS" | grep -q "$REMOTE_COMMIT"; then
-#   echo "\n✓ Local branch is up-to-date with '$TARGET_BRANCH'.\n"
-# else
-#   printf "\n${RED}🚫 [Warning] 로컬 브랜치가 원격 '$TARGET_BRANCH'와 동기화되지 않았습니다!${RESET}\n"
-#   printf "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-#   printf "${YELLOW}💡 아래 명령어를 실행해 최신 상태로 동기화하세요:\n"
-#   printf "   ▶️ git pull origin $TARGET_BRANCH\n\n"
-#   printf "${GREEN}   참고: 로컬 최근 커밋 목록 중 원격의 마지막 커밋이 포함되어 있는지 검사합니다.\n${RESET}"
-#   printf "${GREEN}        로컬 커밋이 쌓여있을 경우, 동기화 상태에서도 해당 메세지가 표시될 수 있습니다.\n${RESET}"
-#   printf "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-# fi
+echo
+echo "✓ Branch protection check passed"
 
-# # ------------------- lint 검사 -------------------
 
-# # npx lint-staged
-# pnpm run lint:fix
+# ------------------- lint 검사 -------------------
 
-# echo
-# echo "✓ Finished linting tasks and fixing code issues"
+# npx lint-staged
+pnpm run lint:fix
+
+echo
+echo "✓ Finished linting tasks and fixing code issues"
