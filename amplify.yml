@@ -21,7 +21,7 @@ frontend:
     preBuild:
       commands:
         - npm install -g pnpm
-        - pnpm install
+        - pnpm install --prefer-offline
     build:
       commands:
         - pnpm run build
