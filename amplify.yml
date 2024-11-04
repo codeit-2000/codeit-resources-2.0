@@ -18,10 +18,6 @@ backend:
       - node_modules/**/*
 frontend:
   phases:
-    preBuild:
-      commands:
-        - npm install -g pnpm
-        - pnpm install --prefer-offline
     build:
       commands:
         - pnpm run build
