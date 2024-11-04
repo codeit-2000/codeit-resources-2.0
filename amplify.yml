@@ -1,13 +1,9 @@
 version: 1
 backend:
   phases:
-    preBuild:
-      commands:
-        - npm install -g pnpm
-        - pnpm install --prefer-offline
     build:
       commands:
-        - pnpm install --frozen-lockfile --prefer-offline
+        - npm ci --prefer-offline
         - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
   artifacts:
     baseDirectory: build
@@ -18,13 +14,9 @@ backend:
       - node_modules/**/*
 frontend:
   phases:
-    preBuild:
-      commands:
-        - npm install -g pnpm
-        - pnpm install
     build:
       commands:
-        - pnpm run build
+        - npm run build
   artifacts:
     baseDirectory: .next
     files:
