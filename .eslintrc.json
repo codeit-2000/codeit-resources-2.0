@@ -51,5 +51,5 @@
       }
     }
   ],
-  "ignorePatterns": ["next.config.js", "postcss.config.mjs"]
+  "ignorePatterns": ["next.config.js", "postcss.config.mjs", "amplify/**/*.ts"]
 }
