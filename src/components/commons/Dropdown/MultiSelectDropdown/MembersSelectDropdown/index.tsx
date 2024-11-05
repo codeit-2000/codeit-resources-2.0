@@ -1,10 +1,10 @@
+import Badge from "@/components/commons/Badge";
+import ProfileImage from "@/components/commons/ProfileImage";
+import useDropdown from "@/hooks/useDropdown";
 import ArrowDown from "@public/icons/icon-arrow-down.svg";
 import CheckedBox from "@public/icons/icon-checkbox-active.svg";
 import UnCheckedBox from "@public/icons/icon-checkbox.svg";
 import SearchIcon from "@public/icons/icon-search.svg";
-import Badge from "@/components/commons/Badge";
-// import ProfileImage from "@src/components/commons/ProfileImage";
-import useDropdown from "@/hooks/useDropdown";
 import clsx from "clsx";
 import { createContext, useContext, useMemo, useState } from "react";
 
@@ -183,7 +183,9 @@ function MemberItem({
         <UnCheckedBox className="mr-5 w-16 flex-shrink-0" />
       )}
 
-      <div className="flex-shrink-0">{/* <ProfileImage size="sm" /> */}</div>
+      <div className="flex-shrink-0">
+        <ProfileImage size="sm" />
+      </div>
       <span className="mt-2 flex-shrink-0">{member.name}</span>
       <div className="flex-grow overflow-x-auto">
         <div className="flex gap-3">
