@@ -1,4 +1,5 @@
 import outputs from "@/../amplify_outputs.json";
+import Layout from "@/components/Layout";
 import MobileSizeWatcher from "@/components/commons/MobileSizeWatcher";
 import ModalProvider from "@/components/commons/Modal";
 import ToastProvider from "@/components/commons/Toast/ToastProvider";
@@ -29,7 +30,9 @@ export default function App({ Component, pageProps }: AppProps) {
       <ToastProvider />
       <MobileSizeWatcher />
       <ModalProvider />
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
