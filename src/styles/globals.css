@@ -3,20 +3,57 @@
 @tailwind utilities;
 @import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css);
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+body {
+  font-family: "Spoqa Han Sans Neo", "sans-serif";
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer components {
+  input.autofill-target:-webkit-autofill {
+    @apply shadow-[0_0_0_1000px_white_inset] !important;
+  }
+
+  input.autofill-target:hover,
+  input.autofill-target:-webkit-autofill:hover {
+    @apply shadow-[0_0_0_1000px_#f6f6f8_inset] !important;
+  }
+
+  input.autofill-target:focus,
+  input.autofill-target:-webkit-autofill:focus {
+    @apply shadow-[0_0_0_1000px_#f8ecff_inset] !important;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: "Spoqa Han Sans Neo", "sans-serif";
+.input-base {
+  @apply text-16-500 rounded-8 block h-56 w-full appearance-none border px-16 text-gray-100 text-gray-100-opacity-20 outline-none duration-200 hover:bg-gray-10;
+}
+
+.label-base {
+  @apply text-13-400 absolute start-2 top-1 z-10 mx-10 h-10 origin-[0] -translate-y-9 bg-white duration-200;
+}
+
+.label-placeholder-shown {
+  @apply peer-placeholder-shown:text-16-400 pointer-events-none peer-placeholder-shown:top-1/2 peer-placeholder-shown:h-fit peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-opacity-0;
+}
+
+.label-focus {
+  @apply peer-focus:text-13-400 peer-focus:top-1 peer-focus:mx-10 peer-focus:h-10 peer-focus:-translate-y-9 peer-focus:bg-white;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+select::-ms-expand {
+  display: none;
 }
