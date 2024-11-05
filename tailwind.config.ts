@@ -1,5 +1,9 @@
 import type { Config } from "tailwindcss";
-import colors from "./src/constants/colors"
+
+import colors from "./src/constants/colors";
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const tailwindPresetPxToRem = require("tailwindcss-preset-px-to-rem");
 
 const config: Config = {
   content: [
@@ -7,6 +11,7 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  presets: [tailwindPresetPxToRem],
   theme: {
     extend: {
       colors: {
