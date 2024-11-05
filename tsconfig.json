@@ -15,7 +15,8 @@
     "incremental": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@public/*": ["./public/*"]
+      "@public/*": ["./public/*"],
+      "@amplify/*": ["./amplify/*"]
     }
   },
   "include": ["svgr.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx"],
