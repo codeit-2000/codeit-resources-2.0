@@ -1,4 +1,5 @@
 import MobileSizeWatcher from "@/components/commons/MobileSizeWatcher";
+import ModalProvider from "@/components/commons/Modal";
 import ToastProvider from "@/components/commons/Toast/ToastProvider";
 import "@/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -21,9 +22,10 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Component {...pageProps} />
       <ToastProvider />
       <MobileSizeWatcher />
+      <ModalProvider />
+      <Component {...pageProps} />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
