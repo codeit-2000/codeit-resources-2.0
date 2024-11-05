@@ -42,6 +42,7 @@ const schema = a.schema({
       image: a.string(),
       owner: a.string(),
       reservations: a.hasMany("Reservation", "resourceId"),
+      googleResourceId: a.string(),
     })
     .secondaryIndexes((index) => [
       index("resourceType")
@@ -79,6 +80,7 @@ const schema = a.schema({
       endTime: a.time().required(), // TIME, ISO 8601 확장 시간 문자열 (형식: hh:mm:ss.sss)
       status: a.ref("ReservationStatus").required(), // 예약 상태
       participants: a.string().array(), // 참여자 목록, 유저 id를 배열로 저장
+      googleEventId: a.string(),
     })
     .secondaryIndexes((index) => [
       //  ** 리소스 id 별 예약 데이터 index **
