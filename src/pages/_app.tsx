@@ -8,11 +8,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Amplify } from "aws-amplify";
 import type { AppProps } from "next/app";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 Amplify.configure(outputs);
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -25,14 +28,20 @@ export default function App({ Component, pageProps }: AppProps) {
       }),
   );
 
+  const isSignInPage = router.pathname === "/sign-in";
+
   return (
     <QueryClientProvider client={queryClient}>
       <ToastProvider />
       <MobileSizeWatcher />
       <ModalProvider />
-      <Layout>
+      {isSignInPage ? (
         <Component {...pageProps} />
-      </Layout>
+      ) : (
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      )}
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
