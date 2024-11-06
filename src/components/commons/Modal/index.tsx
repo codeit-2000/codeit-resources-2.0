@@ -1,5 +1,8 @@
 import AddMeetingRoomTypeModal from "@/components/pages/admin/meeting-rooms/AddMeetingRoomTypeModal";
 import DeleteMemberModal from "@/components/pages/admin/members/DeleteMemberModal";
+import AddTeamModal from "@/components/pages/admin/teams/AddTeamModal";
+import DeleteTeamModal from "@/components/pages/admin/teams/DeleteTeamModal";
+import UpdateTeamModal from "@/components/pages/admin/teams/UpdateTeamModal";
 import CreateRoomReservationModal from "@/components/pages/meeting-rooms/modals/CreateRoomReservationModal";
 import DeleteRoomReservationModal from "@/components/pages/meeting-rooms/modals/DeleteRoomReservationModal";
 import UpdateRoomReservationModal from "@/components/pages/meeting-rooms/modals/UpdateRoomReservationModal";
@@ -34,9 +37,9 @@ function ModalProvider() {
 
   const modalComponents: Record<string, React.ElementType> = {
     moveSeatConfirm: MoveSeatConfirmModal,
-    // addTeamModal: AddTeamModal,
-    // updateTeamModal: UpdateTeamModal,
-    // deleteTeamModal: DeleteTeamModal,
+    addTeamModal: AddTeamModal,
+    updateTeamModal: UpdateTeamModal,
+    deleteTeamModal: DeleteTeamModal,
     addMeetingRoomTypeModal: AddMeetingRoomTypeModal,
     deleteSeatReservationModal: DeleteSeatReservationModal,
     createRoomReservationModal: CreateRoomReservationModal,
