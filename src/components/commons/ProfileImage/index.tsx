@@ -1,6 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 import { getImageUrl } from "@/lib/api/storage";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 
 interface Props {
@@ -28,34 +29,23 @@ export default function ProfileImage({
     staleTime: 10 * 60 * 1000, // 10분
   });
 
-  const dimensions = {
-    sm: 32,
-    md: 40,
-    lg: 72,
-    xl: 120,
-  }[size];
+  const classnames = clsx("rounded-full object-cover", {
+    "size-32": size === "sm",
+    "size-40": size === "md",
+    "size-72": size === "lg",
+    "size-120": size === "xl",
+  });
 
   useEffect(() => {
     if (imageUrl) setImageSrc(imageUrl);
   }, [imageUrl]);
 
   return (
-    <div
-      style={{
-        width: dimensions,
-        height: dimensions,
-        borderRadius: "50%",
-        overflow: "hidden",
-      }}
-      className="flex items-center justify-center"
-    >
-      <Image
-        src={imageSrc}
-        alt={userName ? `${userName}의 profile` : "profile"}
-        width={dimensions}
-        height={dimensions}
-        onError={() => setImageSrc(DEFAULT_IMAGE)}
-      />
-    </div>
+    <img
+      src={imageSrc}
+      alt={userName ? `${userName}의 profile` : "profile"}
+      className={classnames}
+      onError={() => setImageSrc(DEFAULT_IMAGE)}
+    />
   );
 }
