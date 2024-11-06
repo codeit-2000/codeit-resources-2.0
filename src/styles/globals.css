@@ -24,19 +24,19 @@ body {
 }
 
 .input-base {
-  @apply text-16-500 rounded-8 block h-56 w-full appearance-none border px-16 text-gray-100 text-gray-100-opacity-20 outline-none duration-200 hover:bg-gray-10;
+  @apply block h-56 w-full appearance-none rounded-8 border px-16 text-16-500 text-gray-100 outline-none duration-200 hover:bg-gray-10;
 }
 
 .label-base {
-  @apply text-13-400 absolute start-2 top-1 z-10 mx-10 h-10 origin-[0] -translate-y-9 bg-white duration-200;
+  @apply absolute start-2 top-1 z-10 mx-10 h-10 origin-[0] -translate-y-9 bg-white text-13-400 duration-200;
 }
 
 .label-placeholder-shown {
-  @apply peer-placeholder-shown:text-16-400 pointer-events-none peer-placeholder-shown:top-1/2 peer-placeholder-shown:h-fit peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-opacity-0;
+  @apply pointer-events-none peer-placeholder-shown:top-1/2 peer-placeholder-shown:h-fit peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:bg-opacity-0 peer-placeholder-shown:text-16-400;
 }
 
 .label-focus {
-  @apply peer-focus:text-13-400 peer-focus:top-1 peer-focus:mx-10 peer-focus:h-10 peer-focus:-translate-y-9 peer-focus:bg-white;
+  @apply peer-focus:top-1 peer-focus:mx-10 peer-focus:h-10 peer-focus:-translate-y-9 peer-focus:bg-white peer-focus:text-13-400;
 }
 
 .no-scrollbar {
