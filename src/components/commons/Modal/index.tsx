@@ -1,4 +1,7 @@
 import AddMeetingRoomTypeModal from "@/components/pages/admin/meeting-rooms/AddMeetingRoomTypeModal";
+import CreateRoomReservationModal from "@/components/pages/meeting-rooms/modals/CreateRoomReservationModal";
+import DeleteRoomReservationModal from "@/components/pages/meeting-rooms/modals/DeleteRoomReservationModal";
+import UpdateRoomReservationModal from "@/components/pages/meeting-rooms/modals/UpdateRoomReservationModal";
 import useModal from "@/hooks/useModal";
 import { useEffect, useRef, useState } from "react";
 
@@ -33,9 +36,9 @@ function ModalProvider() {
     // deleteTeamModal: DeleteTeamModal,
     addMeetingRoomTypeModal: AddMeetingRoomTypeModal,
     // deleteSeatReservationModal: DeleteSeatReservationModal,
-    // createRoomReservationModal: CreateRoomReservationModal,
-    // updateRoomReservationModal: UpdateRoomReservationModal,
-    // deleteRoomReservationModal: DeleteRoomReservationModal,
+    createRoomReservationModal: CreateRoomReservationModal,
+    updateRoomReservationModal: UpdateRoomReservationModal,
+    deleteRoomReservationModal: DeleteRoomReservationModal,
     // deleteResourceStatusModal: DeleteResourceStatusModal,
     // deleteMemberModal: DeleteMemberModal,
   };

@@ -1,6 +1,6 @@
-import IconAlert from "@repo/assets/icons/icon-modal-alert.svg?react";
-import Button from "@src/components/commons/Button";
-import useModal from "@src/hooks/useModal";
+import Button from "@/components/commons/Button";
+import useModal from "@/hooks/useModal";
+import IconAlert from "@public/icons/icon-modal-alert.svg";
 
 interface CreateRoomReservationModalProps {
   onConfirm: () => void;
