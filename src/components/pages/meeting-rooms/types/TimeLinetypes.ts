@@ -1,4 +1,4 @@
-import { Reservation } from "@repo/lib/api/utils";
+import { Reservation } from "@/lib/api/amplify/helper";
 
 export interface TimeSlot {
   time: string; // 슬롯의 시간 (예: "09:00")

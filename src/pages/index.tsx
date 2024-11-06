@@ -1,55 +1,47 @@
-import dayjs from "dayjs";
-import { useState } from "react";
+import ErrorBoundary from "@/components/commons/ErrorBoundary";
+import Skeleton from "@/components/commons/Skeleton";
+import MyReservation from "@/components/pages/dashboard/components/MyReservation";
+import { useGetUserReservation } from "@/components/pages/dashboard/hooks/useGetUserReservation";
+import Error from "@/components/pages/seats/Error";
+import { Suspense } from "react";
 
-export default function Home() {
-  const [time1, setTime1] = useState("14:30");
-  const [time2, setTime2] = useState("16:45");
-  const [result, setResult] = useState("");
-
-  const compareTimes = () => {
-    const parsedTime1 = dayjs(time1, "HH:mm");
-    const parsedTime2 = dayjs(time2, "HH:mm");
-
-    let resultText;
-
-    console.log(parsedTime1, parsedTime2);
-
-    if (parsedTime1.isBefore(parsedTime2)) {
-      resultText = `${time1}은 ${time2} 이전입니다.`;
-    } else if (parsedTime1.isAfter(parsedTime2)) {
-      resultText = `${time1}은 ${time2} 이후입니다.`;
-    } else {
-      resultText = `${time1}은 ${time2}와 같습니다.`;
-    }
-
-    setResult(resultText);
-  };
+function DashboardPage() {
+  const { userReservations } = useGetUserReservation();
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>시간 비교기</h1>
-      <label htmlFor="time1">시간 1 (HH:mm):</label>
-      <input
-        type="text"
-        id="time1"
-        value={time1}
-        onChange={(e) => setTime1(e.target.value)}
+    <div className="min-h-[calc(100vh-240px)] bg-gray-5 px-16 py-40 md:p-80">
+      <MyReservation
+        resourceType="ROOM"
+        reservationList={userReservations?.ROOM || []}
       />
-      <br />
-      <br />
-      <label htmlFor="time2">시간 2 (HH:mm):</label>
-      <input
-        type="text"
-        id="time2"
-        value={time2}
-        onChange={(e) => setTime2(e.target.value)}
+      <MyReservation
+        resourceType="SEAT"
+        reservationList={userReservations?.SEAT || []}
       />
-      <br />
-      <br />
-      <button onClick={compareTimes} type="button">
-        비교하기
-      </button>
-      <p>{result}</p>
     </div>
+  );
+}
+
+function Loading() {
+  return (
+    <div className="min-h-screen bg-gray-5 px-16 py-40 md:p-80">
+      <section className="mb-80 flex flex-col gap-16">
+        <Skeleton className="h-40 w-120 rounded-16" />
+        <span className="h-1 w-full border-b-[1px] border-gray-100-opacity-10" />
+        <div className="flex scroll-m-2 gap-16 overflow-x-auto pb-16">
+          <Skeleton className="flex h-172 w-full gap-16 rounded-16 bg-gray-15" />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <ErrorBoundary fallback={<Error />}>
+      <Suspense fallback={<Loading />}>
+        <DashboardPage />
+      </Suspense>
+    </ErrorBoundary>
   );
 }
