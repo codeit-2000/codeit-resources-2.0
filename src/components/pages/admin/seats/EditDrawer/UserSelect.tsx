@@ -3,7 +3,7 @@ import useClickOutside from "@/hooks/useClickOutside";
 import { getUserListData } from "@/lib/api/amplify/user";
 import ArrowDown from "@public/icons/icon-arrow-down.svg";
 import SearchIcon from "@public/icons/icon-search.svg";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -25,7 +25,7 @@ export default function UserSelect() {
     },
   });
 
-  const { data: usersResponse } = useSuspenseQuery({
+  const { data: usersResponse } = useQuery({
     // 전체, 가나다순 정렬
     queryKey: ["memberList", 0, "alphabetical"],
     queryFn: () => getUserListData("0", "alphabetical"),
@@ -67,7 +67,7 @@ export default function UserSelect() {
           className={clsx({ "text-gray-100-opacity-50": !selectedParticipant })}
         >
           {selectedParticipant
-            ? usersResponse.find((user) => user.id === selectedParticipant)
+            ? usersResponse?.find((user) => user.id === selectedParticipant)
                 ?.username || "참여자를 선택해주세요"
             : "참여자를 선택해주세요"}
         </span>

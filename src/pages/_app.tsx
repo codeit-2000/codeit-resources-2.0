@@ -11,7 +11,9 @@ import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-Amplify.configure(outputs);
+Amplify.configure(outputs, { ssr: true });
+
+const AUTH_PATHS = ["/sign-in", "/find-password"];
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -28,14 +30,12 @@ export default function App({ Component, pageProps }: AppProps) {
       }),
   );
 
-  const isSignInPage = router.pathname === "/sign-in";
-
   return (
     <QueryClientProvider client={queryClient}>
       <ToastProvider />
       <MobileSizeWatcher />
       <ModalProvider />
-      {isSignInPage ? (
+      {AUTH_PATHS.includes(router.pathname) ? (
         <Component {...pageProps} />
       ) : (
         <Layout>
