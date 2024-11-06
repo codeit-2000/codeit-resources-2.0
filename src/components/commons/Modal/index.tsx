@@ -1,3 +1,5 @@
+import DeleteSeatReservationModal from "@/components/pages/seats/modals/DeleteSeatReservationModal";
+import MoveSeatConfirmModal from "@/components/pages/seats/modals/MoveSeatConfirmModal";
 import useModal from "@/hooks/useModal";
 import { useEffect, useRef, useState } from "react";
 
@@ -26,12 +28,12 @@ function ModalProvider() {
   if (!modalType && !isVisible) return null;
 
   const modalComponents: Record<string, React.ElementType> = {
-    // moveSeatConfirm: MoveSeatConfirmModal,
+    moveSeatConfirm: MoveSeatConfirmModal,
     // addTeamModal: AddTeamModal,
     // updateTeamModal: UpdateTeamModal,
     // deleteTeamModal: DeleteTeamModal,
     // addMeetingRoomTypeModal: AddMeetingRoomTypeModal,
-    // deleteSeatReservationModal: DeleteSeatReservationModal,
+    deleteSeatReservationModal: DeleteSeatReservationModal,
     // createRoomReservationModal: CreateRoomReservationModal,
     // updateRoomReservationModal: UpdateRoomReservationModal,
     // deleteRoomReservationModal: DeleteRoomReservationModal,

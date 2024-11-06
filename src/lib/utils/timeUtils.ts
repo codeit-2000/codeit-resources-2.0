@@ -178,3 +178,22 @@ export function isTimeOverlap(
 
   return startMinutes1 < endMinutes2 && startMinutes2 < endMinutes1;
 }
+
+export function formatDate(date: Date) {
+  return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+}
+
+export function getTodayAndTomorrow() {
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+
+  return [formatDate(today), formatDate(tomorrow)];
+}
+
+export function formatDayToISO(day: string) {
+  const year = new Date().getFullYear();
+  const [month, date] = day.replace("일", "").split("월 ").map(Number);
+
+  return `${year}-${String(month).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
+}
