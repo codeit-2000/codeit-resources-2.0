@@ -1,3 +1,4 @@
+import AddMeetingRoomTypeModal from "@/components/pages/admin/meeting-rooms/AddMeetingRoomTypeModal";
 import useModal from "@/hooks/useModal";
 import { useEffect, useRef, useState } from "react";
 
@@ -30,7 +31,7 @@ function ModalProvider() {
     // addTeamModal: AddTeamModal,
     // updateTeamModal: UpdateTeamModal,
     // deleteTeamModal: DeleteTeamModal,
-    // addMeetingRoomTypeModal: AddMeetingRoomTypeModal,
+    addMeetingRoomTypeModal: AddMeetingRoomTypeModal,
     // deleteSeatReservationModal: DeleteSeatReservationModal,
     // createRoomReservationModal: CreateRoomReservationModal,
     // updateRoomReservationModal: UpdateRoomReservationModal,
