@@ -48,7 +48,7 @@ function NavigationBar() {
     <nav className="fixed bottom-0 z-20 w-full min-w-[360px] max-w-[767px] bg-gray-100 p-16 md:bottom-auto md:h-screen md:w-[200px] md:min-w-0 md:max-w-none">
       <Link href="/" className="hidden items-center gap-8 pb-12 md:flex">
         <CodeitLogo width={26} height={26} />
-        <CodeitTextLogo color="#fff" width={125} />
+        <CodeitTextLogo color="#fff" width={100} />
       </Link>
       <ul className="flex justify-evenly md:flex-col md:gap-10 md:border-t md:border-white md:border-opacity-10 md:pt-12">
         {NAV_OPTION_LIST.filter((navOption) => !navOption.requiresAdmin).map(
