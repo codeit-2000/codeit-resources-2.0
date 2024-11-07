@@ -1,7 +1,7 @@
 import { getSeatReservationListByDate } from "@/lib/api/amplify/reservation";
 import { getSeatResourceListByResourceStatus } from "@/lib/api/amplify/resource";
 import { userAtom } from "@/store/authUserAtom";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 
@@ -44,7 +44,7 @@ export default function useGetAllSeatsData() {
   const userData = useAtomValue(userAtom);
   const setMySeatInfo = useSetAtom(mySeatInfoAtom);
 
-  const { data } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ["seats", pickedDate],
     queryFn: async () => {
       const [

@@ -5,7 +5,7 @@ import { getSeatResourceListByResourceStatus } from "@/lib/api/amplify/resource"
 import { convertTimeToMinutes } from "@/lib/utils/timeUtils";
 import { userAtom } from "@/store/authUserAtom";
 import { getCurrentTime } from "@/utils/createTime";
-import { useQueries } from "@tanstack/react-query";
+import { useSuspenseQueries } from "@tanstack/react-query";
 import { useAtomValue } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
@@ -52,7 +52,7 @@ export const useGetUserReservation = () => {
     { data: seatReservation = [] },
     { data: fixedSeats = { data: [] } },
     { data: equipmentReservation = [] },
-  ] = useQueries({
+  ] = useSuspenseQueries({
     queries: [
       {
         queryKey: ["rooms", currentDate, "userRoomReservations", user?.id],

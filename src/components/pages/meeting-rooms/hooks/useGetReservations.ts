@@ -2,7 +2,7 @@ import { getReservationListByResourceType } from "@/lib/api/amplify/reservation"
 import { getResourceList } from "@/lib/api/amplify/resource";
 import { getTeamListData } from "@/lib/api/amplify/team";
 import { getUserListData } from "@/lib/api/amplify/user";
-import { useQueries } from "@tanstack/react-query";
+import { useSuspenseQueries } from "@tanstack/react-query";
 import { useAtomValue } from "jotai";
 
 import pickedDateAtom from "../context/pickedDate";
@@ -15,7 +15,7 @@ export const useGetReservations = () => {
     { data: roomReservations },
     { data: users },
     { data: teams },
-  ] = useQueries({
+  ] = useSuspenseQueries({
     queries: [
       {
         queryKey: ["roomList", pickedDate],

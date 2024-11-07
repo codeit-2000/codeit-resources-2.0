@@ -1,6 +1,6 @@
 import { getSeatValidReservationList } from "@/lib/api/amplify/reservation";
 import { getSeatResourceListByResourceStatus } from "@/lib/api/amplify/resource";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 import { SeatData } from "../types";
@@ -37,7 +37,7 @@ export default function useGetAllSeatsData() {
     initializeAllSeatsData(),
   );
 
-  const { data } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ["seats-admin"],
     queryFn: async () => {
       const [

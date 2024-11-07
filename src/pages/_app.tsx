@@ -8,14 +8,15 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Amplify } from "aws-amplify";
 import type { AppProps } from "next/app";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-Amplify.configure(outputs, { ssr: true });
+Amplify.configure(outputs);
 
 const AUTH_PATHS = ["/sign-in", "/find-password"];
 
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   const [queryClient] = useState(
@@ -46,3 +47,7 @@ export default function App({ Component, pageProps }: AppProps) {
     </QueryClientProvider>
   );
 }
+
+export default dynamic(() => Promise.resolve(App), {
+  ssr: false,
+});
