@@ -34,7 +34,7 @@ export default function MeetingRoomsSkeleton() {
               </button>
             </div>
           </div>
-          <div className="mt-10 flex h-63 items-center gap-10 border-b">
+          <div className="mt-10 flex h-63 items-center gap-10 border-b md:mt-24">
             <Skeleton className="mt-20 h-12 w-82 rounded-4" />
             <Skeleton className="mt-20 h-12 w-82 rounded-4" />
             <Skeleton className="mt-20 h-12 w-82 rounded-4" />

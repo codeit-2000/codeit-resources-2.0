@@ -5,8 +5,7 @@ import MembersSelectDropdown from "@/components/commons/Dropdown/MultiSelectDrop
 import { Member } from "@/components/commons/Dropdown/dropdownType";
 import Input from "@/components/commons/Input";
 import TIME_SLOT from "@/constants/timeSlot";
-import { Reservation, Resource } from "@/lib/api/amplify/helper";
-import { getResourceList } from "@/lib/api/amplify/resource/index";
+import { Reservation } from "@/lib/api/amplify/helper";
 import {
   generateTimeSlots,
   getAvailableTimeSlots,
@@ -14,18 +13,17 @@ import {
 } from "@/lib/utils/timeUtils";
 import { userAtom } from "@/store/authUserAtom";
 import { isOpenDrawerAtom } from "@/store/isOpenDrawerAtom";
-import { roomListAtom } from "@/store/reservationAtom";
-import { tempSelectedTimeAtom } from "@/store/tempSelectedTimeAtom";
 import { todayDateAtom } from "@/store/todayDateAtom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useEffect, useMemo } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 
-import pickedDateAtom from "./context/pickedDate";
-import pickedReservationAtom from "./context/pickedReservation";
-import useReservationAction from "./hooks/useReservationAction";
-import useReservationSchema from "./hooks/useReservationSchema";
+import pickedDateAtom from "../context/pickedDate";
+import pickedReservationAtom from "../context/pickedReservation";
+import { useGetReservations } from "../hooks/useGetReservations";
+import useReservationAction from "../hooks/useReservationAction";
+import useReservationSchema from "../hooks/useReservationSchema";
 
 const ALL_TIME_SLOT_ITEMS = generateTimeSlots();
 const TIME_SLOT_ITEMS = getAvailableTimeSlots(TIME_SLOT, getCurrentTime());
@@ -52,55 +50,58 @@ interface ReservationFormProps {
 }
 
 function ReservationForm({ members }: ReservationFormProps) {
-  const { createRoomMutation, updateRoomMutation } = useReservationAction();
+  const currentUser = useAtomValue(userAtom);
+  if (!currentUser) throw new Error("로그인 후 이용해주세요.");
 
-  const setTempSelectedTime = useSetAtom(tempSelectedTimeAtom);
-  const [pickedReservation, setPickedReservation] = useAtom(
-    pickedReservationAtom,
-  );
-
-  const reservationSchema = useReservationSchema();
-
-  const [roomList, setRoomList] = useAtom(roomListAtom);
   const isOpenDrawer = useAtomValue(isOpenDrawerAtom);
   const pickedDate = useAtomValue(pickedDateAtom);
   const today = useAtomValue(todayDateAtom);
-
   const timeSlotItems =
     today.format("YYYY-MM-DD") === pickedDate
       ? TIME_SLOT_ITEMS
       : ALL_TIME_SLOT_ITEMS;
 
-  const currentUser = useAtomValue(userAtom);
-  if (!currentUser) throw new Error("로그인 후 이용해주세요.");
+  const { rooms } = useGetReservations();
+  const roomList = rooms?.data || [];
+
+  const [pickedReservation, setPickedReservation] = useAtom(
+    pickedReservationAtom,
+  );
+  const { createRoomMutation, updateRoomMutation } = useReservationAction();
+  const reservationSchema = useReservationSchema();
+
+  const defaultReservation = useMemo(
+    () => ({
+      title: pickedReservation?.title || "",
+      resourceId: pickedReservation?.resourceId || "",
+      startTime: pickedReservation?.startTime || "",
+      endTime: pickedReservation?.endTime || "",
+      participants: pickedReservation?.participants?.length
+        ? pickedReservation.participants
+            .map((participantId) =>
+              members.find((member) => member.id === participantId),
+            )
+            .filter(
+              (member): member is ReservationMember => member !== undefined,
+            )
+        : members.filter((member) => member.id === currentUser.id),
+    }),
+    [pickedReservation, members, currentUser],
+  );
 
   const methods = useForm<CreateReservationData>({
-    defaultValues: useMemo(
-      () => ({
-        title: pickedReservation?.title || "",
-        resourceId: pickedReservation?.resourceId || "",
-        startTime: pickedReservation?.startTime || "",
-        endTime: pickedReservation?.endTime || "",
-        participants: pickedReservation?.participants?.length
-          ? pickedReservation.participants
-              .map((participantId) =>
-                members.find((member) => member.id === participantId),
-              )
-              .filter(
-                (member): member is ReservationMember => member !== undefined,
-              )
-          : members.filter((member) => member.id === currentUser.id),
-      }),
-      [pickedReservation, members, currentUser],
-    ),
+    defaultValues: defaultReservation,
     resolver: zodResolver(reservationSchema),
     mode: "onChange",
     reValidateMode: "onChange",
   });
 
-  const { handleSubmit, control, watch, reset } = methods;
-  const selectedResourceId = watch("resourceId");
-  const selectedRoom = roomList.find((room) => room.id === selectedResourceId);
+  const { handleSubmit, control, watch, reset, formState } = methods;
+
+  const resourceId = watch("resourceId");
+  const resource = roomList.find((room) => room.id === resourceId);
+  const startTime = watch("startTime");
+  const endTime = watch("endTime");
 
   const onSubmit = async (data: CreateReservationData) => {
     // pickedDate가 없을 경우 함수 실행 중단
@@ -127,79 +128,31 @@ function ReservationForm({ members }: ReservationFormProps) {
     }
   };
 
-  const startTime = watch("startTime");
-  const endTime = watch("endTime");
-  const resourceId = watch("resourceId");
-
   useEffect(() => {
-    // 시간이나 회의실 선택이 변경될 때마다 임시 상태 업데이트
     if (startTime && endTime && resourceId) {
-      setTempSelectedTime({
-        startTime,
-        endTime,
-        resourceId,
-      });
-    }
-  }, [startTime, endTime, resourceId, setTempSelectedTime]);
-
-  useEffect(() => {
-    const { isValid } = methods.formState;
-    if (startTime && endTime && resourceId && isValid) {
       setPickedReservation((prev) => ({
         ...prev,
         startTime,
         endTime,
+        resourceName: resource?.name || "",
+        resourceSubtype: resource?.resourceSubtype || "",
         resourceId,
       }));
     }
-  }, [
-    startTime,
-    endTime,
-    resourceId,
-    setPickedReservation,
-    methods.formState.isValid,
-  ]);
+  }, [startTime, endTime, resourceId, setPickedReservation]);
 
   useEffect(() => {
     if (!isOpenDrawer) {
       setPickedReservation(null);
-      setTempSelectedTime(null);
     }
-  }, [setPickedReservation, setTempSelectedTime, isOpenDrawer]);
-
-  useEffect(() => {
-    const fetchRooms = async () => {
-      const { data: rooms } = (await getResourceList({
-        resourceType: "ROOM",
-      })) as { data: Resource[] };
-      setRoomList(rooms);
-    };
-
-    fetchRooms();
-  }, [setRoomList]);
+  }, [setPickedReservation, isOpenDrawer]);
 
   useEffect(() => {
     // 초기값 설정 또는 수정 모드로 진입할 때만 reset 실행
-    if (!methods.formState.isDirty) {
-      // 폼이 수정되지 않은 상태일 때만
-      const newDefaultValues = {
-        title: pickedReservation?.title || "",
-        resourceId: pickedReservation?.resourceId || "",
-        startTime: pickedReservation?.startTime || "",
-        endTime: pickedReservation?.endTime || "",
-        participants: pickedReservation?.participants?.length
-          ? pickedReservation.participants
-              .map((participantId) =>
-                members.find((member) => member.id === participantId),
-              )
-              .filter(
-                (member): member is ReservationMember => member !== undefined,
-              )
-          : members.filter((member) => member.id === currentUser.id),
-      };
-
-      reset(newDefaultValues);
-    }
+    // if (!methods.formState.isDirty) {
+    // 폼이 수정되지 않은 상태일 때만
+    reset(defaultReservation);
+    // }
   }, [pickedReservation, members, currentUser?.id]);
 
   return (
@@ -223,7 +176,7 @@ function ReservationForm({ members }: ReservationFormProps) {
           render={({ field: { onChange }, fieldState: { error } }) => (
             <Dropdown
               variant="meetingRoom"
-              value={selectedRoom?.name || ""}
+              value={pickedReservation?.resourceName || ""}
               onChange={(selectedId) => {
                 onChange(selectedId);
               }}
@@ -316,7 +269,7 @@ function ReservationForm({ members }: ReservationFormProps) {
         />
 
         <div className="mt-auto">
-          <Button variant="primary" type="submit">
+          <Button variant="primary" type="submit" disabled={!formState.isValid}>
             {pickedReservation?.id ? "예약 수정" : "예약하기"}
           </Button>
         </div>

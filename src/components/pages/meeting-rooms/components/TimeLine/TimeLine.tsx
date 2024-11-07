@@ -2,7 +2,7 @@ import pickedDateAtom from "@/components/pages/meeting-rooms/context/pickedDate"
 import { targetRefAtom } from "@/components/pages/meeting-rooms/context/scroll";
 import useIsMobile from "@/hooks/useIsMobile";
 import { Reservation, Resource } from "@/lib/api/amplify/helper";
-import { getRoundedCurrentTime } from "@/lib/utils/timeUtils";
+import { compareTimes, getRoundedCurrentTime } from "@/lib/utils/timeUtils";
 import { createTimeSlots } from "@/utils/createTime";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
@@ -45,7 +45,9 @@ function TimeLine({ isHeaderShow, room, reservations = [] }: TimeLineProps) {
 
   const timeSlots = createTimeSlots().map((slot) => {
     const reservation = roomReservations?.find(
-      (res) => res.startTime <= slot.time && res.endTime > slot.time,
+      (res) =>
+        compareTimes(slot.time, res.endTime) &&
+        compareTimes(res.startTime, slot.time, true),
     );
 
     const isCurrentTimePeriod = slot.time === currentPeriod;

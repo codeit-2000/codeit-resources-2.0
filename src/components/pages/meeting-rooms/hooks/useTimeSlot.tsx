@@ -1,7 +1,5 @@
-import conflictReservationAtom from "@/components/pages/meeting-rooms/context/conflictReservation";
 import pickedDateAtom from "@/components/pages/meeting-rooms/context/pickedDate";
 import pickedReservationAtom from "@/components/pages/meeting-rooms/context/pickedReservation";
-import { TimeSlot } from "@/components/pages/meeting-rooms/types/TimeLinetypes";
 import { Resource } from "@/lib/api/amplify/helper";
 import {
   add30Minutes,
@@ -11,19 +9,15 @@ import {
 } from "@/lib/utils/timeUtils";
 import { userAtom } from "@/store/authUserAtom";
 import { isOpenDrawerAtom } from "@/store/isOpenDrawerAtom";
-import {
-  activeRoomAtom,
-  selectedReservationAtom,
-  selectedTimeAtom,
-} from "@/store/reservationAtom";
 import { todayDateAtom } from "@/store/todayDateAtom";
 import dayjs from "dayjs";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
+
+import { TimeSlot } from "../components/TimeLine/TimeLineType";
 
 export interface UseTimeSlotProps {
   slot: TimeSlot;
-  onHoverGroup: (id?: string) => void;
   room: Resource;
 }
 
@@ -43,34 +37,30 @@ const useTimeSlot = ({ slot, room }: UseTimeSlotProps) => {
   const currentTime = getCurrentTime();
 
   const currentDate = useAtomValue(todayDateAtom).format("YYYY-MM-DD");
-  const setActiveRoom = useSetAtom(activeRoomAtom);
+
   const setIsOpenDrawer = useSetAtom(isOpenDrawerAtom);
-  const setSelectedTime = useSetAtom(selectedTimeAtom);
-  const setSelectedReservation = useSetAtom(selectedReservationAtom);
 
   const [pickedReservation, setPickedReservation] = useAtom(
     pickedReservationAtom,
   );
 
-  const setConflictReservationAtom = useSetAtom(conflictReservationAtom);
-
-  const isMyReservation = useMemo(() => {
+  const isMyReservation = () => {
     if (!currentUser?.id || !reservation?.participants) return false;
     if (reservation.id === pickedReservation?.id) return false;
     return reservation.participants.includes(currentUser.id);
-  }, [currentUser?.id, reservation?.participants]);
+  };
 
-  const isMyReservationNotExpired = useMemo(() => {
-    if (isMyReservation && pickedDate !== currentDate) return true;
+  const isMyReservationNotExpired = () => {
+    if (isMyReservation() && pickedDate !== currentDate) return true;
     if (!reservation?.endTime) return false;
 
     const timeCurrent = convertTimeToMinutes(currentTime) || 0;
     const timeEnd = convertTimeToMinutes(reservation.endTime) || 0;
     const isExpired = timeEnd <= timeCurrent;
-    return isMyReservation && !isExpired;
-  }, [isMyReservation, reservation?.endTime, currentTime]);
+    return isMyReservation() && !isExpired;
+  };
 
-  const isConflictReservation = useMemo(() => {
+  const isConflictReservation = () => {
     if (!reservation || !pickedReservation) return false;
     if (reservation.resourceId !== pickedReservation.resourceId) return false;
     if (reservation.id === pickedReservation.id) return false; // 자기 자신과의 비교 방지
@@ -82,7 +72,7 @@ const useTimeSlot = ({ slot, room }: UseTimeSlotProps) => {
     const end2 = pickedReservation.endTime as string;
 
     return isTimeOverlap(start1, end1, start2, end2);
-  }, [reservation, pickedReservation]);
+  };
 
   const isPastTime = useMemo(() => {
     if (!time || !pickedDate || pickedDate !== currentDate) return false;
@@ -111,20 +101,18 @@ const useTimeSlot = ({ slot, room }: UseTimeSlotProps) => {
 
     if (reservation) {
       // 1. 예약이 있을 경우
-      if (isMyReservationNotExpired) {
+      if (isMyReservationNotExpired()) {
         // 1-1. 내 예약 && 지나지 않은 예약
-        setSelectedReservation(reservation);
-        setActiveRoom(room.name);
+        // setSelectedReservation(reservation);
+        // setActiveRoom(room.name);
         setIsOpenDrawer(true);
         setPickedReservation(reservation);
       } else {
         // 1-2. 다른 사람 예약 || 지난 내 예약
+        setIsOpenDrawer(false);
       }
     } else {
       // 2. 예약이 없을 경우
-      setSelectedReservation(null);
-      setActiveRoom(room.name);
-      setSelectedTime(time || "");
       setIsOpenDrawer(true);
 
       setPickedReservation({
@@ -137,17 +125,10 @@ const useTimeSlot = ({ slot, room }: UseTimeSlotProps) => {
     }
   }
 
-  useEffect(() => {
-    if (isConflictReservation) {
-      setConflictReservationAtom(true);
-    } else {
-      setConflictReservationAtom(false);
-    }
-  }, [isConflictReservation, reservation, setConflictReservationAtom]);
-
   return {
-    isMyReservation,
-    isMyReservationNotExpired,
+    isMyReservation: isMyReservation(),
+    isMyReservationNotExpired: isMyReservationNotExpired(),
+    isConflictReservation: isConflictReservation(),
     handleClick,
     isPastTime,
   };

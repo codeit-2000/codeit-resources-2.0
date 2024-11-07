@@ -25,7 +25,7 @@ function MyReservation({
 }) {
   return (
     <section className="mb-80 flex flex-col gap-16">
-      <h1 className="text-28-700 text-gray-100">
+      <h1 className="text-24-700 text-gray-100 md:text-28-700">
         내 {RESOURCE_LABELS[resourceType]}
         <span className="ml-12 text-14-500 text-gray-70">
           {RESOURCE_INFO[resourceType].subTitle}

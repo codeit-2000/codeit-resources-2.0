@@ -4,20 +4,20 @@
 import pickedDateAtom from "@/components/pages/meeting-rooms/context/pickedDate";
 import pickedReservationAtom from "@/components/pages/meeting-rooms/context/pickedReservation";
 import useReservationAction from "@/components/pages/meeting-rooms/hooks/useReservationAction";
-import { TimeSlot } from "@/components/pages/meeting-rooms/types/TimeLinetypes";
 import { Reservation, Resource } from "@/lib/api/amplify/helper";
 import { isTimeInRange } from "@/lib/utils/timeUtils";
 import { userAtom } from "@/store/authUserAtom";
-import { tempSelectedTimeAtom } from "@/store/tempSelectedTimeAtom";
 import XButton from "@public/icons/icon-x-button.svg";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
 import { LegacyRef, forwardRef } from "react";
 
+import useTimeSlot from "../../hooks/useTimeSlot";
+import TimeSlotStyle from "./TIME_SLOT_STLYE";
+import { TimeSlot } from "./TimeLineType";
 import { TimeText } from "./TimeText";
 import { Tooltip } from "./Tooltip";
-import useTimeSlot from "./useTimeSlot";
 
 type TimeVerticalLineProps = Pick<
   TimeSlot,
@@ -35,7 +35,7 @@ export function TimeVerticalLine({
   return (
     <div
       className={clsx(
-        "absolute z-10 w-1",
+        "absolute z-[11] w-1",
         isToday && isCurrentTimePeriod
           ? "z-[11] h-full bg-black md:bottom-[-17px] md:h-147"
           : clsx(
@@ -84,7 +84,7 @@ export function ReservationBar({
               e.stopPropagation();
               handleMutation.deleteRoomMutation();
             }}
-            className="absolute -right-8 -top-8"
+            className="absolute -right-8 -top-8 z-[12]"
           >
             <XButton />
           </button>
@@ -129,87 +129,66 @@ function ThirtyMinutesTimeBox(
   const {
     isMyReservation,
     isMyReservationNotExpired,
+    isConflictReservation,
     handleClick,
     isPastTime,
   } = useTimeSlot({
     slot,
-    onHoverGroup,
     room,
   });
 
   const pickedReservation = useAtomValue(pickedReservationAtom);
 
-  const tempSelectedTime = useAtomValue(tempSelectedTimeAtom);
-
   const handleMouseEnter = () => {
-    // 기본: 호버 그룹에 추가
     if (reservation?.id) onHoverGroup(reservation.id);
-    // 예약이 존재하고, 다른 사람 예약 || 지난 내 예약일 경우 툴팁 표시
   };
 
   const handleMouseLeave = () => {
     onHoverGroup(undefined);
   };
 
+  const { isFirstInHoverGroup: isFirst, isLastInHoverGroup: isLast } = slot;
+
   const isPickedTimeSlot =
-    (tempSelectedTime?.resourceId === room.id &&
-      isTimeInRange(
-        tempSelectedTime?.startTime || "",
-        tempSelectedTime?.endTime || "",
-        time || "",
-      )) ||
-    (pickedReservation?.resourceId === room.id &&
-      isTimeInRange(
-        pickedReservation?.startTime || "",
-        pickedReservation?.endTime || "",
-        time || "",
-      ));
+    pickedReservation?.resourceId === room.id &&
+    isTimeInRange(
+      pickedReservation?.startTime || "",
+      pickedReservation?.endTime || "",
+      time || "",
+    );
+
+  // TODO 조건 변수로 분리
+  // TODO 스타일  코드 분리
+  // TODO picked 에 따른 분기 추가
+
+  /** 조건 코드 */
+
+  const isMyReservationOrPicked = isMyReservation || isPickedTimeSlot;
 
   /** 스타일 코드 */
   const MyReservationClass = {
-    TIME_SLOT_BAR:
-      ((hasReservation && isMyReservation) || isPickedTimeSlot) &&
-      "bg-purple-70",
+    TIME_SLOT_BAR: isMyReservationOrPicked && "bg-purple-70",
     TIME_SLOT_HOVER_GROUP:
-      ((hasReservation && isMyReservation) || isPickedTimeSlot) &&
-      clsx("bg-[#ede2f9]", {
-        // 단일 박스 (모든 보더)
-        "shadow-[inset_0px_0px_0px_1px_#D4A4F9]":
-          slot.isFirstInHoverGroup && slot.isLastInHoverGroup,
-        // 시작 박스 (왼쪽 보더 포함)
-        "shadow-[inset_1px_1px_0px_0px_#D4A4F9,inset_0px_-1px_0px_0px_#D4A4F9]":
-          slot.isFirstInHoverGroup && !slot.isLastInHoverGroup,
-
-        // 끝 박스 (오른쪽 보더 포함)
-        "shadow-[inset_-1px_1px_0px_0px_#D4A4F9,inset_0px_-1px_0px_0px_#D4A4F9]":
-          slot.isLastInHoverGroup && !slot.isFirstInHoverGroup,
-
-        // 중간 박스 (가로 보더만)
-        "shadow-[inset_0px_1px_0px_0px_#D4A4F9,inset_0px_-1px_0px_0px_#D4A4F9]":
-          !slot.isFirstInHoverGroup && !slot.isLastInHoverGroup,
-      }),
+      isMyReservationOrPicked && TimeSlotStyle.purpleBorder(isFirst, isLast),
   };
 
   const PickedReservationClass = {
     TIME_SLOT_BAR:
       isPickedTimeSlot &&
-      ((hasReservation &&
-        (!isMyReservation || (isMyReservation && !pickedReservation?.id)) &&
-        "bg-red-600") ||
+      ((hasReservation && isConflictReservation && "bg-red-600") ||
         "bg-purple-70"),
     TIME_SLOT_HOVER_GROUP:
       isPickedTimeSlot &&
       ((hasReservation &&
-        (!isMyReservation || (isMyReservation && !pickedReservation?.id)) &&
-        "bg-[#FBDBE366] shadow-[inset_0_0_0_1px_#D6173A66]") ||
-        "bg-[#ede2f9] shadow-[inset_0_0_0_1px_#D4A4F9]"),
-
+        isConflictReservation &&
+        TimeSlotStyle.redBorder(isFirst, isLast)) ||
+        TimeSlotStyle.purpleBorder(isFirst, isLast)),
     TIME_SLOT_GROUP:
       isPickedTimeSlot &&
       ((hasReservation &&
-        (!isMyReservation || (isMyReservation && !pickedReservation?.id)) &&
-        "bg-[#FBDBE366] shadow-[inset_0_0_0_1px_#D6173A66]") ||
-        "bg-[#ede2f9] shadow-[inset_0_0_0_1px_#D4A4F9]"),
+        isConflictReservation &&
+        TimeSlotStyle.redBorder(isFirst, isLast)) ||
+        TimeSlotStyle.purpleBorder(isFirst, isLast)),
   };
 
   const otherReservationClass = {
@@ -217,7 +196,10 @@ function ThirtyMinutesTimeBox(
     TIME_SLOT_HOVER_GROUP:
       hasReservation &&
       !isMyReservation &&
-      "bg-gray-100-opacity-10 shadow-[inset_0_0_0_1px_#413B541A] [&_.time-slot-bar]:bg-gray-80",
+      `${TimeSlotStyle.grayBorder(
+        slot.isFirstInHoverGroup,
+        slot.isLastInHoverGroup,
+      )} [&_.time-slot-bar]:bg-gray-80`,
   };
 
   const timeSlotBarClass = clsx(

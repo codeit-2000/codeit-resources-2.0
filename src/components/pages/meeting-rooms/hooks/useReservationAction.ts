@@ -31,13 +31,13 @@ const useReservationAction = (reservation?: Reservation) => {
       return null;
     },
     onSuccess: () => {
-      success("회의실 예약이 취소되었습니다");
       queryClient.invalidateQueries({
-        queryKey: ["rooms", pickedDate],
+        queryKey: ["rooms"],
       });
       queryClient.invalidateQueries({
         queryKey: ["roomReservations", pickedDate],
       });
+      success("회의실 예약이 취소되었습니다");
     },
     onError: () => {
       error("회의실 예약 취소에 실패했습니다");
@@ -55,15 +55,6 @@ const useReservationAction = (reservation?: Reservation) => {
       queryClient.invalidateQueries({
         queryKey: ["roomReservations", pickedDate],
       });
-
-      // if (!user || !re.data) return;
-      // sendEmail(
-      //   [user.email],
-      //   "[Codeit Resources] 회의실 예약 일정입니다.",
-      //   re.data.resourceName,
-      //   re.data.date,
-      //   `${re.data.startTime}-${re.data.endTime}`,
-      // );
     },
     onError: () => {
       error("회의실 예약 생성에 실패했습니다.");

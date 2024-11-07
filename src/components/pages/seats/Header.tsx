@@ -64,9 +64,9 @@ function TabItem({ day, activeIndex, onClick }: TabItemProps) {
       <button
         type="button"
         className={clsx("block", {
-          "border-b-2 border-purple-90 pb-16 font-semibold text-purple-90 transition-colors duration-300 ease-in-out":
+          "border-b-2 border-purple-90 pb-6 font-semibold text-purple-90 transition-colors duration-300 ease-in-out":
             day === activeIndex,
-          "pb-18": day !== activeIndex,
+          "pb-8": day !== activeIndex,
         })}
         onClick={onClick}
       >

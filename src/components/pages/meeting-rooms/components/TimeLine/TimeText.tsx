@@ -1,8 +1,9 @@
 import pickedDateAtom from "@/components/pages/meeting-rooms/context/pickedDate";
-import { TimeSlot } from "@/components/pages/meeting-rooms/types/TimeLinetypes";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
+
+import { TimeSlot } from "./TimeLineType";
 
 type TimeTextProps = Pick<
   TimeSlot,

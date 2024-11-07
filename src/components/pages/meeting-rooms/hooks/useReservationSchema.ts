@@ -28,7 +28,7 @@ function useReservationSchema() {
           }),
         )
         .min(1, "참여자는 최소 1명 이상이어야 합니다.")
-        .max(10, "참여자는 최대 10명까지 가능합니다."),
+        .max(30, "참여자는 최대 30명까지 가능합니다."),
     })
     .superRefine((data, ctx) => {
       const { startTime, endTime, resourceId } = data;
@@ -40,7 +40,7 @@ function useReservationSchema() {
       if (!isEndTimeAfterStartTime(startTime, endTime)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "종료 시간은 시작 시간보다 늦어야 합니다.",
+          message: "유효한 시간대를 입력해주세요.",
           path: ["endTime"],
         });
         return;
@@ -53,7 +53,7 @@ function useReservationSchema() {
       if (hasTimeConflict(startTime, startTime, resourceId)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "선택한 시작 시간에 이미 예약된 회의가 있습니다.",
+          message: "이미 예약된 회의가 있습니다.",
           path: ["startTime"],
         });
       }
@@ -61,7 +61,7 @@ function useReservationSchema() {
       if (hasTimeConflict(endTime, endTime, resourceId)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "선택한 종료 시간에 이미 예약된 회의가 있습니다.",
+          message: "이미 예약된 회의가 있습니다.",
           path: ["endTime"],
         });
       }
@@ -72,7 +72,7 @@ function useReservationSchema() {
       ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "선택한 시간 범위 내에 이미 예약된 회의가 있습니다.",
+          message: "이미 예약된 회의가 있습니다.",
           path: ["endTime"],
         });
       }
