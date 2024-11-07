@@ -1,4 +1,3 @@
-/* eslint-disable no-case-declarations */
 import { adminAtom, authAtom, userAtom } from "@/store/authUserAtom";
 import type { Schema } from "@amplify/data/resource";
 import { generateClient } from "aws-amplify/api";
@@ -15,17 +14,19 @@ const client = generateClient<Schema>();
 
 Hub.listen("auth", async ({ payload }) => {
   switch (payload.event) {
-    case "signInWithRedirect":
+    case "signInWithRedirect": {
       const user = await getCurrentUser();
       const userAttributes = await fetchUserAttributes();
       console.log({ user, userAttributes });
       break;
+    }
     case "signInWithRedirect_failure":
       break;
-    case "customOAuthState":
+    case "customOAuthState": {
       const state = payload.data;
       console.log(state);
       break;
+    }
     default:
       break;
   }
