@@ -5,6 +5,7 @@ import Tab from "@/components/commons/Tab";
 import getDaysUntilEndOfMonth, {
   getDaysUntilEndOfMonthType,
 } from "@/lib/utils/getDaysUntilEndOfMonth";
+import { isOpenDrawerAtom } from "@/store/isOpenDrawerAtom";
 import { todayDateAtom } from "@/store/todayDateAtom";
 import clsx from "clsx";
 import dayjs from "dayjs";
@@ -32,6 +33,8 @@ function Header({ className }: { className?: string }) {
     daysData: currentDaysData,
   });
   const setPickedDate = useSetAtom(pickedDateAtom as PrimitiveAtom<string>);
+
+  const setIsOpenDrawer = useSetAtom(isOpenDrawerAtom);
 
   const isSameMonthAsToday = (
     year: number = currentHeaderDate.year,
@@ -122,6 +125,7 @@ function Header({ className }: { className?: string }) {
                   "pb-8": index !== activeIndex,
                 })}
                 onClick={() => {
+                  setIsOpenDrawer(false);
                   handleClick(index);
                   // 선택된 탭의 날짜로 pickedDate 업데이트
                   setPickedDate(

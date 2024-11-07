@@ -6,8 +6,8 @@ import { compareTimes, getRoundedCurrentTime } from "@/lib/utils/timeUtils";
 import { createTimeSlots } from "@/utils/createTime";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
-import { useEffect, useState } from "react";
 
+import useGroupManager from "../../hooks/useGroupManager";
 import ThirtyMinutesTimeBox from "./ThirtyMinutesTimeBox";
 
 interface TimeLineProps {
@@ -17,20 +17,6 @@ interface TimeLineProps {
 }
 
 function TimeLine({ isHeaderShow, room, reservations = [] }: TimeLineProps) {
-  const [hoveredReservationId, setHoveredReservationId] = useState<
-    string | undefined
-  >(undefined);
-  const [hoverGroupFirstIndex, setHoverGroupFirstIndex] = useState<
-    number | null
-  >(null);
-  const [hoverGroupLastIndex, setHoverGroupLastIndex] = useState<number | null>(
-    null,
-  );
-
-  const handleHoverGroup = (reservationId: string | undefined) => {
-    setHoveredReservationId(reservationId);
-  };
-
   const isMobile = useIsMobile();
 
   const currentPeriod = getRoundedCurrentTime();
@@ -64,26 +50,8 @@ function TimeLine({ isHeaderShow, room, reservations = [] }: TimeLineProps) {
     ? `${timeSlots.length * 48}px`
     : `${timeSlots.length * 72}px`;
 
-  // 호버된 예약의 첫 번째와 마지막 인덱스 계산
-  useEffect(() => {
-    if (hoveredReservationId) {
-      const indices = timeSlots
-        .map((slot, index) =>
-          slot.reservation?.id === hoveredReservationId ? index : -1,
-        )
-        .filter((index) => index !== -1);
-      if (indices.length > 0) {
-        setHoverGroupFirstIndex(indices[0]);
-        setHoverGroupLastIndex(indices[indices.length - 1]);
-      } else {
-        setHoverGroupFirstIndex(null);
-        setHoverGroupLastIndex(null);
-      }
-    } else {
-      setHoverGroupFirstIndex(null);
-      setHoverGroupLastIndex(null);
-    }
-  }, [hoveredReservationId, timeSlots]);
+  const hoverGroup = useGroupManager(timeSlots, "hover");
+  const pickedGroup = useGroupManager(timeSlots, "picked");
 
   const targetRef = useAtomValue(targetRefAtom);
 
@@ -92,12 +60,22 @@ function TimeLine({ isHeaderShow, room, reservations = [] }: TimeLineProps) {
       <ul className="flex h-full md:h-75" style={{ width: timelineWidth }}>
         {timeSlots.map((slot, index) => {
           const isHovered =
-            (hoveredReservationId &&
-              slot.reservation?.id === hoveredReservationId) ||
+            (hoverGroup.reservationId &&
+              slot.reservation?.id === hoverGroup.reservationId) ||
             false;
           const isFirstInHoverGroup =
-            isHovered && index === hoverGroupFirstIndex;
-          const isLastInHoverGroup = isHovered && index === hoverGroupLastIndex;
+            isHovered && index === hoverGroup.groupFirstIndex;
+          const isLastInHoverGroup =
+            isHovered && index === hoverGroup.groupLastIndex;
+
+          const isPicked =
+            (pickedGroup.reservationId &&
+              slot.reservation?.id === pickedGroup.reservationId) ||
+            false;
+          const isFirstInPickedGroup =
+            isPicked && index === pickedGroup.groupFirstIndex;
+          const isLastInPickedGroup =
+            isPicked && index === pickedGroup.groupLastIndex;
 
           return (
             <ThirtyMinutesTimeBox
@@ -107,12 +85,14 @@ function TimeLine({ isHeaderShow, room, reservations = [] }: TimeLineProps) {
                 isHovered,
                 isFirstInHoverGroup,
                 isLastInHoverGroup,
+                isFirstInPickedGroup,
+                isLastInPickedGroup,
               }}
-              onHoverGroup={handleHoverGroup}
+              onHoverGroup={hoverGroup.handleGroup}
               isHeaderShow={isHeaderShow}
               room={room}
               ref={slot.isCurrentTimePeriod && isToday ? targetRef : null}
-              hoveredReservationId={hoveredReservationId || "0"}
+              hoveredReservationId={hoverGroup.reservationId || "0"}
             />
           );
         })}

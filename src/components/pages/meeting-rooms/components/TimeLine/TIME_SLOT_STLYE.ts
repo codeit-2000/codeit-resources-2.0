@@ -23,7 +23,8 @@ const TimeSlotStyle = {
     ),
 
   purpleBorder: (isFirst: boolean = false, isLast: boolean = false) =>
-    clsx(`bg-[#ede2f9]`, {
+    // TODO 컬러수정
+    clsx(`bg-[#9933FF1A]`, {
       "shadow-[inset_0px_0px_0px_1px_#D4A4F9]": isFirst && isLast,
       "shadow-[inset_1px_1px_0px_0px_#D4A4F9, inset_0px_-1px_0px_0px_#D4A4F9]":
         isFirst && !isLast,

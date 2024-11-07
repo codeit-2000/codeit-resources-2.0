@@ -46,18 +46,19 @@ const useTimeSlot = ({ slot, room }: UseTimeSlotProps) => {
 
   const isMyReservation = () => {
     if (!currentUser?.id || !reservation?.participants) return false;
-    if (reservation.id === pickedReservation?.id) return false;
+
     return reservation.participants.includes(currentUser.id);
   };
 
   const isMyReservationNotExpired = () => {
-    if (isMyReservation() && pickedDate !== currentDate) return true;
+    if (!isMyReservation()) return false;
     if (!reservation?.endTime) return false;
+    if (pickedDate !== currentDate) return true;
 
-    const timeCurrent = convertTimeToMinutes(currentTime) || 0;
-    const timeEnd = convertTimeToMinutes(reservation.endTime) || 0;
+    const timeCurrent = convertTimeToMinutes(currentTime);
+    const timeEnd = convertTimeToMinutes(reservation.endTime);
     const isExpired = timeEnd <= timeCurrent;
-    return isMyReservation() && !isExpired;
+    return !isExpired;
   };
 
   const isConflictReservation = () => {
@@ -77,7 +78,8 @@ const useTimeSlot = ({ slot, room }: UseTimeSlotProps) => {
   const isPastTime = useMemo(() => {
     if (!time || !pickedDate || pickedDate !== currentDate) return false;
     const now = dayjs();
-    const [hours, minutes] = time.split(":").map(Number);
+    const endTime = add30Minutes(time);
+    const [hours, minutes] = endTime.split(":").map(Number);
 
     // 선택된 날짜와 시간을 합쳐서 비교
     const slotDateTime = dayjs(pickedDate).hour(hours).minute(minutes);
@@ -103,8 +105,6 @@ const useTimeSlot = ({ slot, room }: UseTimeSlotProps) => {
       // 1. 예약이 있을 경우
       if (isMyReservationNotExpired()) {
         // 1-1. 내 예약 && 지나지 않은 예약
-        // setSelectedReservation(reservation);
-        // setActiveRoom(room.name);
         setIsOpenDrawer(true);
         setPickedReservation(reservation);
       } else {

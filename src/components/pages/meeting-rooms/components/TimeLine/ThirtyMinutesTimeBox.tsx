@@ -11,7 +11,7 @@ import XButton from "@public/icons/icon-x-button.svg";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
-import { LegacyRef, forwardRef } from "react";
+import { LegacyRef, forwardRef, useEffect } from "react";
 
 import useTimeSlot from "../../hooks/useTimeSlot";
 import TimeSlotStyle from "./TIME_SLOT_STLYE";
@@ -126,6 +126,16 @@ function ThirtyMinutesTimeBox(
     slot;
   const is24Hour = time === "24:00";
 
+  const pickedReservation = useAtomValue(pickedReservationAtom);
+
+  const isPickedTimeSlot =
+    pickedReservation?.resourceId === room.id &&
+    isTimeInRange(
+      pickedReservation?.startTime || "",
+      pickedReservation?.endTime || "",
+      time || "",
+    );
+
   const {
     isMyReservation,
     isMyReservationNotExpired,
@@ -136,8 +146,7 @@ function ThirtyMinutesTimeBox(
     slot,
     room,
   });
-
-  const pickedReservation = useAtomValue(pickedReservationAtom);
+  const isMyReservationOrPicked = isMyReservation || isPickedTimeSlot;
 
   const handleMouseEnter = () => {
     if (reservation?.id) onHoverGroup(reservation.id);
@@ -147,59 +156,65 @@ function ThirtyMinutesTimeBox(
     onHoverGroup(undefined);
   };
 
-  const { isFirstInHoverGroup: isFirst, isLastInHoverGroup: isLast } = slot;
-
-  const isPickedTimeSlot =
-    pickedReservation?.resourceId === room.id &&
-    isTimeInRange(
-      pickedReservation?.startTime || "",
-      pickedReservation?.endTime || "",
-      time || "",
-    );
+  const {
+    isFirstInHoverGroup,
+    isLastInHoverGroup,
+    isFirstInPickedGroup,
+    isLastInPickedGroup,
+  } = slot;
 
   // TODO 조건 변수로 분리
   // TODO 스타일  코드 분리
   // TODO picked 에 따른 분기 추가
 
-  /** 조건 코드 */
-
-  const isMyReservationOrPicked = isMyReservation || isPickedTimeSlot;
-
   /** 스타일 코드 */
   const MyReservationClass = {
     TIME_SLOT_BAR: isMyReservationOrPicked && "bg-purple-70",
     TIME_SLOT_HOVER_GROUP:
-      isMyReservationOrPicked && TimeSlotStyle.purpleBorder(isFirst, isLast),
+      isMyReservationOrPicked &&
+      TimeSlotStyle.purpleBorder(isFirstInHoverGroup, isLastInHoverGroup),
   };
 
   const PickedReservationClass = {
     TIME_SLOT_BAR:
       isPickedTimeSlot &&
-      ((hasReservation && isConflictReservation && "bg-red-600") ||
-        "bg-purple-70"),
+      ((isConflictReservation && "bg-red-600") || "bg-purple-70"),
     TIME_SLOT_HOVER_GROUP:
       isPickedTimeSlot &&
-      ((hasReservation &&
-        isConflictReservation &&
-        TimeSlotStyle.redBorder(isFirst, isLast)) ||
-        TimeSlotStyle.purpleBorder(isFirst, isLast)),
+      ((isConflictReservation &&
+        TimeSlotStyle.redBorder(isFirstInHoverGroup, isLastInHoverGroup)) ||
+        TimeSlotStyle.purpleBorder(isFirstInHoverGroup, isLastInHoverGroup)),
     TIME_SLOT_GROUP:
       isPickedTimeSlot &&
-      ((hasReservation &&
-        isConflictReservation &&
-        TimeSlotStyle.redBorder(isFirst, isLast)) ||
-        TimeSlotStyle.purpleBorder(isFirst, isLast)),
+      ((isConflictReservation &&
+        TimeSlotStyle.redBorder(isFirstInPickedGroup, isLastInPickedGroup)) ||
+        TimeSlotStyle.purpleBorder(isFirstInPickedGroup, isLastInPickedGroup)),
   };
 
   const otherReservationClass = {
-    TIME_SLOT_BAR: hasReservation && !isMyReservation && "bg-gray-40",
+    TIME_SLOT_BAR: !isMyReservation && "bg-gray-40",
     TIME_SLOT_HOVER_GROUP:
-      hasReservation &&
       !isMyReservation &&
-      `${TimeSlotStyle.grayBorder(
-        slot.isFirstInHoverGroup,
-        slot.isLastInHoverGroup,
-      )} [&_.time-slot-bar]:bg-gray-80`,
+      clsx(
+        `bg-[#3332361A] [&_.time-slot-bar]:bg-gray-80`, // 배경색 지정
+        {
+          // 단일 박스 (모든 보더)
+          "shadow-[inset_0px_0px_0px_1px_#413B541A]":
+            isFirstInHoverGroup && isLastInHoverGroup,
+
+          // 시작 박스 (왼쪽 보더 포함)
+          "shadow-[inset_1px_1px_0px_0px_#413B541A, inset_0px_-1px_0px_0px_#413B541A]":
+            isFirstInHoverGroup && !isLastInHoverGroup,
+
+          // 끝 박스 (오른쪽 보더 포함)
+          "shadow-[inset_-1px_1px_0px_0px_#413B541A, inset_0px_-1px_0px_0px_#413B541A]":
+            isLastInHoverGroup && !isFirstInHoverGroup,
+
+          // 중간 박스 (가로 보더만)
+          "shadow-[inset_0px_1px_0px_0px_#413B541A, inset_0px_-1px_0px_0px_#413B541A]":
+            !isFirstInHoverGroup && !isLastInHoverGroup,
+        },
+      ),
   };
 
   const timeSlotBarClass = clsx(
@@ -261,7 +276,7 @@ function ThirtyMinutesTimeBox(
             {slot.isFirstInHoverGroup &&
               slot.reservation?.id === hoveredReservationId &&
               reservation &&
-              (!isMyReservationNotExpired || !isMyReservation) && (
+              !isMyReservationNotExpired && (
                 <span className="z-[21]">
                   <Tooltip
                     title={reservation?.title}
