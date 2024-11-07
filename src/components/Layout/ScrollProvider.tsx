@@ -1,11 +1,10 @@
-import { useSetAtom } from "jotai";
-import { useEffect, useRef } from "react";
-
 import {
   containerRefAtom,
   mobileContainerRefAtom,
   targetRefAtom,
-} from "./context/scroll";
+} from "@/store/scrollAtom";
+import { useSetAtom } from "jotai";
+import { useEffect, useRef } from "react";
 
 function ScrollProvider({ children }: { children: React.ReactNode }) {
   const setContainerRef = useSetAtom(containerRefAtom);
@@ -22,7 +21,7 @@ function ScrollProvider({ children }: { children: React.ReactNode }) {
     setTargetRef(targetRef);
   }, [setContainerRef, setTargetRef]);
 
-  return <div>{children}</div>;
+  return <>{children}</>;
 }
 
 export default ScrollProvider;

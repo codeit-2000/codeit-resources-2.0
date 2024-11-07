@@ -9,6 +9,7 @@ import { AnimatePresence } from "framer-motion";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Suspense, useEffect, useMemo, useState } from "react";
 
+import { containerRefAtom, targetRefAtom } from "../../../store/scrollAtom";
 import Error from "../seats/Error";
 import Layout from "./Layout";
 import MeetingRoomsSkeleton from "./components/MeetingRoomsSkeleton";
@@ -16,7 +17,6 @@ import ReservationForm from "./components/ReservationForm";
 import RoomSelection from "./components/RoomSelection";
 import pickedDateAtom from "./context/pickedDate";
 import pickedReservationAtom from "./context/pickedReservation";
-import { containerRefAtom, targetRefAtom } from "./context/scroll";
 import { useGetReservations } from "./hooks/useGetReservations";
 
 function MeetingRoomsPage() {

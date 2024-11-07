@@ -1,8 +1,8 @@
 import pickedDateAtom from "@/components/pages/meeting-rooms/context/pickedDate";
-import { targetRefAtom } from "@/components/pages/meeting-rooms/context/scroll";
 import useIsMobile from "@/hooks/useIsMobile";
 import { Reservation, Resource } from "@/lib/api/amplify/helper";
 import { compareTimes, getRoundedCurrentTime } from "@/lib/utils/timeUtils";
+import { targetRefAtom } from "@/store/scrollAtom";
 import { createTimeSlots } from "@/utils/createTime";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";

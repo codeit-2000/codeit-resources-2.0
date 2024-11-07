@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import { PrimitiveAtom, useAtomValue, useSetAtom } from "jotai";
 import { useState } from "react";
 
-import ScrollProvider from "./ScrollProvider";
+import ScrollProvider from "../../Layout/ScrollProvider";
 import pickedDateAtom from "./context/pickedDate";
 
 interface DateState {
