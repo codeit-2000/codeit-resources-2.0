@@ -1,13 +1,11 @@
 import pickedReservationAtom from "@/components/pages/meeting-rooms/context/pickedReservation";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 
 import { TimeSlot } from "../components/TimeLine/TimeLineType";
 
 function useGroupManager(timeSlots: TimeSlot[], groupType: "hover" | "picked") {
-  const [pickedReservation, setPickedReservationAtom] = useAtom(
-    pickedReservationAtom,
-  );
+  const pickedReservation = useAtomValue(pickedReservationAtom);
   const [reservationId, setReservationId] = useState<string | undefined>(
     undefined,
   );

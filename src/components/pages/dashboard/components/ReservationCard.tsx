@@ -2,6 +2,7 @@ import Badge from "@/components/commons/Badge";
 import Button from "@/components/commons/Button";
 import useIsOngoing from "@/hooks/useIsOngoing";
 import { Reservation } from "@/lib/api/amplify/helper";
+import { compareTimes, getCurrentTime } from "@/lib/utils/timeUtils";
 
 import { getResourceDetails } from "../RESOURCE_INFO";
 import useDashboardAction from "../hooks/useDashboardAction";
@@ -90,6 +91,13 @@ function ReservationCard({
   const buttonActions = useDashboardAction(reservation);
   const isOngoing = useIsOngoing(reservation.startTime, reservation.endTime);
   const resourceDetail = getResourceDetails(reservation);
+  const currentTime = getCurrentTime();
+
+  if (
+    reservation.resourceType === "ROOM" &&
+    !compareTimes(currentTime, reservation.endTime)
+  )
+    return null;
 
   return isDetailed ? (
     <DetailedCard
