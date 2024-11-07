@@ -1,4 +1,3 @@
-import { createServerRunner } from "@aws-amplify/adapter-nextjs";
 import { Amplify } from "aws-amplify";
 import { generateClient } from "aws-amplify/data";
 
@@ -37,7 +36,3 @@ export type ResourceType = (typeof RESOURCE_TYPE)[number];
 
 export const RESERVATION_STATUS = client.enums.ReservationStatus.values();
 export type ReservationStatus = (typeof RESERVATION_STATUS)[number];
-
-export const { runWithAmplifyServerContext } = createServerRunner({
-  config: outputs,
-});
