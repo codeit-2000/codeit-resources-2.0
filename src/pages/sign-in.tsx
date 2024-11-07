@@ -1,7 +1,9 @@
+import Button from "@/components/commons/Button";
 import SignInForm from "@/components/pages/sign-in/SignInForm";
 import { authAtom } from "@/store/authUserAtom";
 import CodeitTextLogo from "@public/images/codeit-resources.svg";
 import CodeitLogo from "@public/images/codeit.svg";
+import { signInWithRedirect } from "aws-amplify/auth";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -19,6 +21,12 @@ function SignIn() {
     }
   }, [isAuthenticated, router]);
 
+  const handleClickGoogle = async () => {
+    await signInWithRedirect({
+      provider: "Google",
+    });
+  };
+
   return (
     <div className="mt-120 flex flex-col items-center justify-center gap-33 px-8 md:mt-240">
       <div className="flex flex-col items-center gap-24">
@@ -30,6 +38,11 @@ function SignIn() {
         />
       </div>
       <SignInForm />
+      <div className="h-50">
+        <Button variant="secondary" type="button" onClick={handleClickGoogle}>
+          구글 로그인 테스트하기
+        </Button>
+      </div>
       <Link
         href="/find-password"
         className="cursor-pointer text-14-400 text-gray-80 hover:text-gray-100"
