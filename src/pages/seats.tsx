@@ -7,7 +7,7 @@ import { Suspense } from "react";
 
 export default function Seats() {
   return (
-    <div className="h-screen overflow-x-auto bg-gray-5">
+    <div className="min-h-screen overflow-x-hidden bg-gray-5">
       <Header />
 
       <section className="xl:flex xl:justify-center">

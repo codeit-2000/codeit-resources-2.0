@@ -18,7 +18,7 @@ export default function SeatGrid() {
     <ScrollProvider>
       {/* eslint-disable-next-line */}
       <div
-        className="mb-200 overflow-x-auto md:mx-60"
+        className="mb-200 overflow-x-hidden md:mx-60 md:mb-0"
         ref={containerRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
