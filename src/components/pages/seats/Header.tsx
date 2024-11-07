@@ -29,7 +29,7 @@ export default function Header() {
   };
 
   return (
-    <header className="border-b border-gray-100-opacity-20 bg-white pl-16 pt-62 md:pl-64 md:pt-24">
+    <header className="border-b border-gray-100-opacity-20 bg-white pl-16 pt-62 text-gray-100 md:pl-64 md:pt-24">
       <h1 className="text-24-700 md:text-28-700">좌석 예약</h1>
 
       <Tab defaultIndex={defaultDate} className="gap-24 md:mt-24">
@@ -64,9 +64,9 @@ function TabItem({ day, activeIndex, onClick }: TabItemProps) {
       <button
         type="button"
         className={clsx("block", {
-          "border-b-2 border-purple-90 pb-16 font-semibold text-purple-90 transition-colors duration-300 ease-in-out":
+          "border-b-2 border-purple-90 pb-6 font-semibold text-purple-90 transition-colors duration-300 ease-in-out":
             day === activeIndex,
-          "pb-18": day !== activeIndex,
+          "pb-8": day !== activeIndex,
         })}
         onClick={onClick}
       >
