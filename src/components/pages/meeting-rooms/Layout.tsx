@@ -125,7 +125,7 @@ function Header({ className }: { className?: string }) {
                   handleClick(index);
                   // 선택된 탭의 날짜로 pickedDate 업데이트
                   setPickedDate(
-                    `${currentHeaderDate.year}-${String(currentHeaderDate.month).padStart(2, "0")}-${day}`,
+                    `${currentHeaderDate.year}-${String(currentHeaderDate.month).padStart(2, "0")}-${day.padStart(2, "0")}`,
                   );
                 }}
               >
