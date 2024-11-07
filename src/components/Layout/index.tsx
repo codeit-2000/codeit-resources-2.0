@@ -1,7 +1,10 @@
+/* eslint-disable no-case-declarations */
 import { adminAtom, authAtom, userAtom } from "@/store/authUserAtom";
 import type { Schema } from "@amplify/data/resource";
 import { generateClient } from "aws-amplify/api";
-import { getCurrentUser } from "aws-amplify/auth";
+import { fetchUserAttributes, getCurrentUser } from "aws-amplify/auth";
+import "aws-amplify/auth/enable-oauth-listener";
+import { Hub } from "aws-amplify/utils";
 import { useAtom, useSetAtom } from "jotai";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -9,6 +12,24 @@ import React, { useEffect } from "react";
 import NavigationBar from "./NavigationBar";
 
 const client = generateClient<Schema>();
+
+Hub.listen("auth", async ({ payload }) => {
+  switch (payload.event) {
+    case "signInWithRedirect":
+      const user = await getCurrentUser();
+      const userAttributes = await fetchUserAttributes();
+      console.log({ user, userAttributes });
+      break;
+    case "signInWithRedirect_failure":
+      break;
+    case "customOAuthState":
+      const state = payload.data;
+      console.log(state);
+      break;
+    default:
+      break;
+  }
+});
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useAtom(authAtom);
