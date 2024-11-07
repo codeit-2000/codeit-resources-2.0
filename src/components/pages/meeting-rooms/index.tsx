@@ -1,18 +1,16 @@
-// import { Resource } from "@repo/constants/type";
 import Drawer from "@/components/commons/Drawer";
-// import ErrorBoundary from "@/components/commons/ErrorBoundary";
+import ErrorBoundary from "@/components/commons/ErrorBoundary";
 import { Resource } from "@/lib/api/amplify/helper";
 import { getGroupedResourceListBySubtype } from "@/lib/api/amplify/resource/utils";
 import { isOpenDrawerAtom } from "@/store/isOpenDrawerAtom";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence } from "framer-motion";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 
-// import { Suspense, useMemo } from "react";
-// import Error from "../seats/Error";
+import Error from "../seats/Error";
 import Layout from "./Layout";
-// import MeetingRoomsSkeleton from "./MeetingRoomsSkeleton";
+import MeetingRoomsSkeleton from "./MeetingRoomsSkeleton";
 import ReservationForm from "./ReservationForm";
 import RoomSelection from "./RoomSelection";
 import pickedDateAtom from "./context/pickedDate";
@@ -108,10 +106,10 @@ function MeetingRoomsPage() {
 
 export default function MeetingRooms() {
   return (
-    // <ErrorBoundary fallback={<Error />}>
-    //   <Suspense fallback={<MeetingRoomsSkeleton />}>
-    <MeetingRoomsPage />
-    //   </Suspense>
-    // </ErrorBoundary>
+    <ErrorBoundary fallback={<Error />}>
+      <Suspense fallback={<MeetingRoomsSkeleton />}>
+        <MeetingRoomsPage />
+      </Suspense>
+    </ErrorBoundary>
   );
 }
