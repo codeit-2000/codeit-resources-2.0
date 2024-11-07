@@ -99,7 +99,7 @@ export const useGetUserReservation = () => {
     },
   ];
 
-  const sortedRoomReservations = roomReservation.sort(
+  const sortedRoomReservations = roomReservation?.sort(
     (a, b) =>
       (convertTimeToMinutes(a?.startTime) as number) -
       (convertTimeToMinutes(b?.startTime) as number),

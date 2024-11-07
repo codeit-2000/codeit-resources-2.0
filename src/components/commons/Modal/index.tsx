@@ -1,5 +1,6 @@
 import AddMeetingRoomTypeModal from "@/components/pages/admin/meeting-rooms/AddMeetingRoomTypeModal";
 import DeleteMemberModal from "@/components/pages/admin/members/DeleteMemberModal";
+import DeleteResourceStatusModal from "@/components/pages/admin/seats/modals/DeleteResourceStatusModal";
 import AddTeamModal from "@/components/pages/admin/teams/AddTeamModal";
 import DeleteTeamModal from "@/components/pages/admin/teams/DeleteTeamModal";
 import UpdateTeamModal from "@/components/pages/admin/teams/UpdateTeamModal";
@@ -45,7 +46,7 @@ function ModalProvider() {
     createRoomReservationModal: CreateRoomReservationModal,
     updateRoomReservationModal: UpdateRoomReservationModal,
     deleteRoomReservationModal: DeleteRoomReservationModal,
-    // deleteResourceStatusModal: DeleteResourceStatusModal,
+    deleteResourceStatusModal: DeleteResourceStatusModal,
     deleteMemberModal: DeleteMemberModal,
   };
 

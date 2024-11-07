@@ -120,10 +120,7 @@ function MemberEditDrawer({
         </Button>
       </div>
       <FormProvider {...methods}>
-        <form
-          className="mt-32 flex flex-col gap-24"
-          onSubmit={methods.handleSubmit(onSubmit)}
-        >
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
           <MemberForm
             teamList={teamList}
             selectedTeams={selectedTeams}

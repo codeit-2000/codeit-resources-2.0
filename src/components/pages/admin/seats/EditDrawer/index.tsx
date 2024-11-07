@@ -101,7 +101,7 @@ export default function EditDrawer() {
                 </Suspense>
               )}
 
-              <div className="fixed bottom-40 w-[90%]">
+              <div className="absolute bottom-40 w-[90%]">
                 <Button type="submit">
                   {editMutation.isPending ? (
                     <LoadingSpinner height={27} width="100%" />

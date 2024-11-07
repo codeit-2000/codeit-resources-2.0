@@ -55,7 +55,7 @@ export const checkReservationConflict = async (
   if (errors) throw new Error(errors[0].message);
 
   // 2. 확인할 예약의 시간이 유효한지 확인
-  if (compareTimes(startTime, endTime)) {
+  if (!compareTimes(startTime, endTime)) {
     throw new Error("종료 시간은 시작 시간보다 늦어야 합니다.");
   }
 

@@ -95,10 +95,7 @@ function MemberAddDrawer({ setOpenKey, teamList }: MemberAddDrawerProps) {
     <div className="mt-32 flex w-full flex-col">
       <h2 className="text-24-700">멤버 추가</h2>
       <FormProvider {...methods}>
-        <form
-          className="mt-32 flex flex-col gap-24"
-          onSubmit={methods.handleSubmit(onSubmit)}
-        >
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
           <MemberForm
             teamList={teamList}
             selectedTeams={selectedTeams}

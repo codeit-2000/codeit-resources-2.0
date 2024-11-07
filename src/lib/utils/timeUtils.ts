@@ -101,9 +101,23 @@ export function isEndTimeAfterStartTime(
   startTime: string,
   endTime: string,
 ): boolean {
-  const result = compareTimes(startTime, endTime);
-  if (!result) throw new Error("종료 시간은 시작 시간보다 늦어야 합니다.");
-  return result;
+  // const result = compareTimes(startTime, endTime);
+  // if (!result) throw new Error("종료 시간은 시작 시간보다 늦어야 합니다.");
+  // return result;
+
+  const startMinutes = convertTimeToMinutes(startTime);
+  const endMinutes = convertTimeToMinutes(endTime);
+
+  if (startMinutes === null || endMinutes === null) {
+    return false; // 유효하지 않은 시간 형식
+  }
+
+  // "24:00" 처리 - 종료 시간이 정확히 24:00일 경우 다음날로 설정
+  if (endTime === "24:00") {
+    return true;
+  }
+
+  return endMinutes > startMinutes;
 }
 
 export function add30Minutes(time: string): string {

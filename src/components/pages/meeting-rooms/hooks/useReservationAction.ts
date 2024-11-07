@@ -8,7 +8,6 @@ import {
 } from "@/lib/api/amplify/reservation";
 import { userAtom } from "@/store/authUserAtom";
 import { isOpenDrawerAtom } from "@/store/isOpenDrawerAtom";
-import { sendEmail } from "@/utils/sendMail";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAtomValue, useSetAtom } from "jotai";
 
@@ -48,7 +47,7 @@ const useReservationAction = (reservation?: Reservation) => {
   // 회의실 예약 생성
   const createRoomMutation = useMutation({
     mutationFn: (re: Reservation) => createReservation(re),
-    onSuccess: (re) => {
+    onSuccess: () => {
       success("회의실 예약이 생성되었습니다.");
       queryClient.invalidateQueries({
         queryKey: ["rooms", pickedDate],
@@ -57,14 +56,14 @@ const useReservationAction = (reservation?: Reservation) => {
         queryKey: ["roomReservations", pickedDate],
       });
 
-      if (!user || !re.data) return;
-      sendEmail(
-        [user.email],
-        "[Codeit Resources] 회의실 예약 일정입니다.",
-        re.data.resourceName,
-        re.data.date,
-        `${re.data.startTime}-${re.data.endTime}`,
-      );
+      // if (!user || !re.data) return;
+      // sendEmail(
+      //   [user.email],
+      //   "[Codeit Resources] 회의실 예약 일정입니다.",
+      //   re.data.resourceName,
+      //   re.data.date,
+      //   `${re.data.startTime}-${re.data.endTime}`,
+      // );
     },
     onError: () => {
       error("회의실 예약 생성에 실패했습니다.");
