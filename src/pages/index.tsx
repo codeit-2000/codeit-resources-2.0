@@ -9,7 +9,7 @@ function DashboardPage() {
   const { userReservations } = useGetUserReservation();
 
   return (
-    <div className="min-h-[calc(100vh-240px)] bg-gray-5 px-16 py-62 md:p-80 md:py-40">
+    <div className="min-h-screen bg-gray-5 px-16 py-62 md:p-80 md:py-40">
       <MyReservation
         resourceType="ROOM"
         reservationList={userReservations?.ROOM || []}

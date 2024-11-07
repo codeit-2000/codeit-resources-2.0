@@ -97,9 +97,10 @@ function MeetingRoomsPage() {
     <>
       <div>
         <Layout>
+          <div className="z-[24] hidden h-full w-44 overflow-x-auto overflow-y-visible bg-gradient-to-r from-gray-5 from-50% to-gray-00-opacity-0 to-90% md:absolute md:block md:py-60" />
           {/* eslint-disable-next-line */}
           <div
-            className="no-scrollbar overflow-x-auto overflow-y-visible md:py-60"
+            className="no-scrollbar overflow-x-auto overflow-y-visible md:py-60 md:pl-24"
             ref={containerRef}
             onMouseDown={isInitialScrollDone ? handleMouseDown : undefined}
             onMouseMove={isInitialScrollDone ? handleMouseMove : undefined}

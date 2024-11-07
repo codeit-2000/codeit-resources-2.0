@@ -75,7 +75,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div>
       <NavigationBar />
-      <main className="md:ml-200">{children}</main>
+      <main className="min-h-screen md:ml-200">{children}</main>
     </div>
   );
 }

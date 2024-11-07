@@ -44,7 +44,7 @@ function RoomSelection({
           !isMobile && "mt-32",
         )}
       >
-        <span className="md:absolute md:-translate-x-[128px] md:-translate-y-full">
+        <span className="md:absolute md:-translate-x-[152px] md:-translate-y-full">
           {subType}
         </span>
       </h3>
@@ -61,7 +61,7 @@ function RoomSelection({
               type="button"
               onClick={() => handleRoomClick(room.name)}
               className={clsx(
-                "flex h-48 w-max min-w-80 cursor-pointer items-center justify-center rounded-8 border-[1px] px-16 text-16-500 md:absolute md:h-59 md:min-w-128 md:-translate-x-full",
+                "flex h-48 w-max min-w-80 cursor-pointer items-center justify-center rounded-8 border-[1px] px-16 text-16-500 md:absolute md:h-59 md:min-w-128 md:-translate-x-[calc(24px+100%)]",
                 {
                   "bg-purple-80 text-gray-0":
                     pickedReservation?.resourceName === room.name &&
