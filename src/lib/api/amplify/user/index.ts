@@ -104,3 +104,32 @@ export const getUserListData = async (category: string, order: OrderType) => {
       return sortUserList(userListByTeam, order);
   }
 };
+
+// #################### ver 2.0 ####################
+
+/**
+ * 구글 로그인한 유저 생성하기
+ */
+export type CreateGoogleUserParams = {
+  username: string; // 유저 이름
+  email: string; // 유저 이메일
+  role: Role; // 유저 역할 ADMIN | MEMBER
+  teams: string[]; // 소속 팀
+  profileImage?: string; // 유저 프로필 이미지
+  // cognitoId: string;
+};
+/**
+ * @description [유저 생성하기] - 구글 로그인
+ *
+ * id, username, email, role, teams 모두 입력받아야 합니다.
+ */
+export const createGoogleUser = async (param: CreateGoogleUserParams) =>
+  client.models.User.create(param);
+
+/**
+ * 해당 이메일을 가진 유저 가져오기
+ */
+export const getUserListByEmail = async (email: string) =>
+  client.models.User.list({
+    filter: { email: { eq: email } },
+  });

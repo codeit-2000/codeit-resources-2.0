@@ -20,7 +20,10 @@ const schema = a.schema({
       createdAt: a.datetime(),
       // foo: a.string(),
     })
-    .authorization((allow) => [allow.groups(["ADMIN", "MEMBER"])])
+    .authorization((allow) => [
+      allow.groups(["ADMIN", "MEMBER"]),
+      allow.guest(),
+    ])
     .secondaryIndexes((index) => [
       index("role").sortKeys(["username"]).queryField("listUsersByRoleName"),
       index("role").sortKeys(["createdAt"]).queryField("listUsersByRoleDate"),
