@@ -1,9 +1,11 @@
 import Button from "@/components/commons/Button";
 import useToast from "@/hooks/useToast";
 import { authAtom } from "@/store/authUserAtom";
+import { clearAllCookies } from "@/utils/cookieUtils";
 import LoadingSpinner from "@public/gifs/loading-spinner.svg";
 import { signOut } from "aws-amplify/auth";
 import { useSetAtom } from "jotai";
+import { signOut as signOutGoogle } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -16,8 +18,10 @@ export default function AccountSection() {
   const handleLogout = async () => {
     setIsPending(true);
     try {
+      await signOutGoogle({ redirect: false, callbackUrl: "/sign-in" });
       await signOut();
       localStorage.clear();
+      clearAllCookies();
       setIsAuthenticated(false);
       success("성공적으로 로그아웃되었습니다.");
       router.push("/sign-in");

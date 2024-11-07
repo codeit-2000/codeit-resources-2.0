@@ -7,6 +7,8 @@ import "@/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Amplify } from "aws-amplify";
+import type { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -16,7 +18,10 @@ Amplify.configure(outputs);
 
 const AUTH_PATHS = ["/sign-in", "/find-password"];
 
-function App({ Component, pageProps }: AppProps) {
+function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps<{ session: Session }>) {
   const router = useRouter();
 
   const [queryClient] = useState(
@@ -32,19 +37,21 @@ function App({ Component, pageProps }: AppProps) {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ToastProvider />
-      <MobileSizeWatcher />
-      <ModalProvider />
-      {AUTH_PATHS.includes(router.pathname) ? (
-        <Component {...pageProps} />
-      ) : (
-        <Layout>
+    <SessionProvider session={session}>
+      <QueryClientProvider client={queryClient}>
+        <ToastProvider />
+        <MobileSizeWatcher />
+        <ModalProvider />
+        {AUTH_PATHS.includes(router.pathname) ? (
           <Component {...pageProps} />
-        </Layout>
-      )}
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+        ) : (
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        )}
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </SessionProvider>
   );
 }
 

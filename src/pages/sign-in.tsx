@@ -3,29 +3,23 @@ import SignInForm from "@/components/pages/sign-in/SignInForm";
 import { authAtom } from "@/store/authUserAtom";
 import CodeitTextLogo from "@public/images/codeit-resources.svg";
 import CodeitLogo from "@public/images/codeit.svg";
-import { signInWithRedirect } from "aws-amplify/auth";
 import { useAtomValue } from "jotai";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 function SignIn() {
-  const isAuthenticated = useAtomValue(authAtom);
+  // const isAuthenticated = useAtomValue(authAtom);
 
-  const router = useRouter();
+  // const router = useRouter();
 
-  useEffect(() => {
-    // 인증된 경우 dashboard 페이지로 리다이렉트
-    if (isAuthenticated) {
-      router.push("/");
-    }
-  }, [isAuthenticated, router]);
-
-  const handleClickGoogle = async () => {
-    await signInWithRedirect({
-      provider: "Google",
-    });
-  };
+  // useEffect(() => {
+  //   // 인증된 경우 dashboard 페이지로 리다이렉트
+  //   if (isAuthenticated) {
+  //     router.push("/");
+  //   }
+  // }, [isAuthenticated, router]);
 
   return (
     <div className="mt-120 flex flex-col items-center justify-center gap-33 px-8 md:mt-240">
@@ -39,8 +33,12 @@ function SignIn() {
       </div>
       <SignInForm />
       <div className="h-50">
-        <Button variant="secondary" type="button" onClick={handleClickGoogle}>
-          구글 로그인 테스트하기
+        <Button
+          variant="secondary"
+          type="button"
+          onClick={() => signIn("google", { callbackUrl: "/" })}
+        >
+          구글 로그인 하기
         </Button>
       </div>
       <Link
